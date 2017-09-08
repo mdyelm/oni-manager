@@ -1,0 +1,34 @@
+
+
+.userTableEditor {
+    padding: 10px;
+
+    .tableHeader,
+    .tableContent {
+        display: flex;
+
+        .cell {
+            padding: 5px;
+            width: calc(100% / 6);
+            text-align: center;
+        }
+
+    }
+
+    .tableHeader {
+
+        .cell {
+            opacity: 0.75;
+        }
+
+    }
+
+    .tableContent {
+        &.add {
+            margin: 10px 0 0 0;
+            padding: 10px 0 0 0;
+            border-top: 1px solid #ccc;
+        }
+    }
+
+}

@@ -1,0 +1,7 @@
+@import "../_includes/_modules/_enviromentSelector";
+@import "../_includes/_modules/_recycleUploader";
+
+.backgroundUploader .field .preview img {
+    width: calc(640px/2);
+    height: calc(820px/2);
+}

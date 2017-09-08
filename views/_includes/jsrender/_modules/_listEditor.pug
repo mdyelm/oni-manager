@@ -1,0 +1,172 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+script(type="text/html" id="listEditor")
+    | {{if enableEnv == true}}
+    .listEnviromentSelector
+        .language
+            | {{for languages}}
+            .languageItem(class="actionSelectEnviroment {{if #index == 0}}selected{{/if}}" data-language-code="{{:code}}") {{:name}}
+            | {{/for}}
+        .os
+            | {{for os}}
+            .osItem(class="actionSelectEnviroment {{if #index == 0}}selected{{/if}}" data-os-code="{{:code}}") {{:name}}
+            | {{/for}}
+    | {{/if}}
+
+    .listContent
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+script(type="text/html" id="listEditor_table_topics_footerhtml")
+    | {{for languages}}
+    | {{for ~root.os ~languageCode=code}}
+    .list(data-language-code="{{:~languageCode}}" data-os-code="{{:code}}" class="hidden")
+        table
+            tr.listItem(data-index="0")
+                td
+                    textarea( data-fieldname="html" placeholder="HTML" )
+                        | {{if ~root.topicsFooterHTML[~languageCode][code][0] }}
+                        | {{:~root.topicsFooterHTML[~languageCode][code][0].html}}
+                        | {{/if}}
+        //- table
+        //-
+        //-     | {{for ~root.categories[~languageCode][code]}}
+        //-     tr.listItem(data-index="{{:#index}}")
+        //-         td
+        //-             label
+        //-                 | <input data-fieldname="isEnabled" type="checkbox" value="1" {{if isEnabled == 1}}checked="checked"{{/if}}>
+        //-                 | 有効
+        //-         td
+        //-             input(data-fieldname="code" type="text" value="{{:code}}")
+        //-         td
+        //-             input(data-fieldname="name" type="text" value="{{:name}}")
+        //-         //- td
+        //-         //-     label
+        //-         //-         | <input data-fieldname="enableTimezoneSuggest" type="checkbox" value="1" {{if enableTimezoneSuggest == 1}}checked="checked"{{/if}}>
+        //-         //-         | 表示
+        //-         td
+        //-             .menu
+        //-                 .button.actionRemoveListItem ×
+        //-                 .button.actionUpPosition ↑
+        //-                 .button.actionDownPosition ↓
+        //-
+        //-     | {{/for}}
+
+        //- .menu
+        //-     .button.actionAddListItem 追加する
+
+    | {{/for}}
+    | {{/for}}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+script(type="text/html" id="listEditor_table_category")
+    | {{for languages}}
+    | {{for ~root.os ~languageCode=code}}
+    .list(data-language-code="{{:~languageCode}}" data-os-code="{{:code}}" class="hidden")
+        table
+            tr
+                th ステータス
+                th コード
+                th カテゴリ名
+                //- th 時間帯おすすめ
+                th 操作
+
+            | {{for ~root.categories[~languageCode][code]}}
+            tr.listItem(data-index="{{:#index}}")
+                td
+                    .input
+                        label(class="{{if isEnabled == 1}}selected{{/if}}")
+                            | <input data-fieldname="isEnabled" type="checkbox" value="1" {{if isEnabled == 1}}checked="checked"{{/if}}>
+                            | 有効
+                td
+                    .input
+                        input(data-fieldname="code" type="text" value="{{:code}}")
+                td
+                    .input
+                        input(data-fieldname="name" type="text" value="{{:name}}")
+                //- td
+                //-     label
+                //-         | <input data-fieldname="enableTimezoneSuggest" type="checkbox" value="1" {{if enableTimezoneSuggest == 1}}checked="checked"{{/if}}>
+                //-         | 表示
+                td
+                    .menu
+                        .button.actionRemoveListItem ×
+                        .button.actionUpPosition ↑
+                        .button.actionDownPosition ↓
+
+            | {{/for}}
+
+        .menu
+            .button.actionAddListItem 追加する
+
+    | {{/for}}
+    | {{/for}}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+script(type="text/html" id="listEditor_table_timezone")
+    | {{for languages}}
+    | {{for ~root.os ~languageCode=code}}
+    .list(data-language-code="{{:~languageCode}}" data-os-code="{{:code}}" class="hidden")
+        table
+            tr
+                th コード
+                th タイムゾーン名
+                th 時間帯
+                th 操作
+
+            | {{for ~root.timezones[~languageCode][code]}}
+            tr.listItem(data-index="{{:#index}}")
+                td
+                    input(data-fieldname="code" type="text" value="{{:code}}")
+                td
+                    input(data-fieldname="name" type="text" value="{{:name}}")
+                td
+                    input.short(data-fieldname="beginTime" type="time" value="{{:beginTime}}")
+                    | ～
+                    input.short(data-fieldname="endTime" type="time" value="{{:endTime}}")
+
+                td
+                    .menu
+                        .button.actionRemoveListItem ×
+
+            | {{/for}}
+
+        .menu
+            .button.actionAddListItem 追加する
+
+    | {{/for}}
+    | {{/for}}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//- script(type="text/html" id="listEditor_table_timezone")
+//-     .list
+//-         table
+//-             tr
+//-                 th コード
+//-                 th タイムゾーン名
+//-                 th 時間帯
+//-                 th 操作
+//-
+//-             | {{for timezones}}
+//-             tr.listItem(data-index="{{:#index}}")
+//-                 td
+//-                     input(data-fieldname="code" type="text" value="{{:code}}")
+//-                 td
+//-                     input(data-fieldname="name" type="text" value="{{:name}}")
+//-                 td
+//-                     input(data-fieldname="beginTime" type="time" value="{{:beginTime}}")
+//-                     | ～
+//-                     input(data-fieldname="endTime" type="time" value="{{:endTime}}")
+//-
+//-                 td
+//-                     .menu
+//-                         .button.actionRemoveListItem ×
+//-
+//-             | {{/for}}
+//-         .menu
+//-             .button.actionAddListItem 追加する
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

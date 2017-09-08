@@ -1,0 +1,21 @@
+@import "../_includes/_modules/_listEditor";
+
+.container > .content .pageContent section > h2 {
+    margin: 0 0 20px 0;
+}
+
+table {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+
+    th, td {
+        border-bottom: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    th {
+        background: #eee;
+    }
+
+}

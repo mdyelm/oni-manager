@@ -1,0 +1,48 @@
+@import "../_includes/_define";
+@import "../_includes/_modules/_formEnviromentSelector";
+@import "../_includes/_modules/_recycleUploader";
+@import "../_includes/_modules/_sceneSetEditor";
+
+.editPane {
+
+    .situation {
+        margin: -30px;
+        padding: 30px;
+        background: #ede9e3;
+
+        &.isHidden {
+            display: none;
+        }
+
+
+    }
+
+    .specialButtonUploader {
+
+        .field .preview img {
+            width: calc(640px / 2);
+            height: calc(128px / 2);
+        }
+
+        .popup .preview img {
+            width: calc(640px / 2);
+            height: calc(128px / 2);
+        }
+
+    }
+
+    .storeThumbnailUploader {
+
+        .field .preview img {
+            width: calc(234px / 2);
+            height: calc(308px / 2);
+        }
+
+        .popup .preview img {
+            width: calc(234px / 2);
+            height: calc(308px / 2);
+        }
+
+    }
+
+}

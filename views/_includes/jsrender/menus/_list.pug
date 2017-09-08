@@ -1,0 +1,177 @@
+script(type="text/html" id="list")
+    .groupSelector
+        .group.groupCategory
+            | {{for categories[currentLanguageCode][currentOsCode]}}
+            .groupItem(data-category-code="{{:code}}" class="actionShowCategoryRelated {{if #index == 0}}selected{{/if}}") {{:name}}
+            | {{/for}}
+
+        //- .specialGroup
+        //-     .groupTitle 特殊
+        //-     .groupItem 時間帯おすすめ
+
+    | {{for categories[currentLanguageCode][currentOsCode]}}
+    .groupDetail(class="chainCategoryRelated {{if #index != 0}}hidden{{/if}}" data-category-code="{{:code}}")
+        .info
+            .resultCount
+                span {{:~root.listData[code].length}}
+                | 件のメニューを表示中
+
+        .list
+            table
+                tr.header
+                    th.center ID
+                    th.center ステータス
+                    //- th.center 種類
+                    th.center カテゴリ
+                    th.center アイコン
+                    th.center ボタン背景
+                    th キャラクター名<br>シチュエーション名 (コード)
+                    th.center 課金
+                    th 最終更新
+                    th.center 操作
+
+                | {{for ~root.listData[code] }}
+                tr.item(
+                    data-id="{{:id}}"
+                    data-position="{{:#getIndex()}}")
+
+                    td.center
+                      | {{:id}}
+
+                    td.center.isEnabled
+                        |{{if situationDetail.isEnabled == 1 }}
+                        .enabled 有効
+                        | {{/if}}
+
+                        |{{if situationDetail.isEnabled == 0 }}
+                        .disabled 無効
+                        | {{/if}}
+
+                        |{{if situationDetail.isEnabled == 2 }}
+                        .test テスト公開
+                        | {{/if}}
+
+                    //- td.center
+                    //-   | {{:type}}
+
+                    td.center
+                      | {{if type == "normal"}}{{:category}}{{/if}}
+                      | {{if type == "timezoneSuggest"}}{{:timezone}}{{/if}}
+
+                    td.center
+                        img(src="{{:iconImagePath}}" style="background: #888;" alt="アイコン")
+
+
+                    td.center
+                        | {{if bannerSize == 'normal'}}
+                        img.smallBanner(src="{{:buttonImagePath}}" alt ="通常バナー")
+                        | {{/if}}
+                        | {{if bannerSize == 'large'}}
+                        img.largeBanner(src="{{:buttonImagePath}}" alt="バナー大")
+                        | {{/if}}
+
+
+                    td
+                        | {{:situationDetail.characterName}}<br>
+                        | <strong>{{:situationDetail.situationName}}</strong><br>
+                        | ({{:situation.code}})
+
+                    td.center.isPayment
+                        |{{if situation.isPayment == 1 }}
+                        .payment 有料
+                        | {{/if}}
+                        |{{if situation.isPayment == 0 }}
+                        .free 無料
+                        | {{/if}}
+
+                    td
+                        | {{if timestamps}}{{:timestamps.update}}{{/if}}
+
+                    | {{if id}}
+                    td.center
+                        .menu
+                            .button(class="actionPositionUp") ↑
+                            .button(class="actionPositionDown") ↓
+                    | {{/if}}
+
+                | {{/for}}
+
+    | {{/for}}
+
+script(type="text/html" id="list_disabled")
+    .info
+        .resultCount
+            span {{:listData.length}}
+            | 件のメニューを表示中
+    .list
+        table
+            tr.header
+                th.center ID
+                th.center ステータス
+                //- th.center 種類
+                th.center カテゴリ
+                th.center アイコン
+                th.center ボタン背景
+                th キャラクター名<br>シチュエーション名 (コード)
+                th.center 課金
+                th 最終更新
+                th.center 操作
+
+            | {{for listData}}
+            tr.item(
+                class="{{if situationDetail.isEnabled == 0}}disabled{{/if}}"
+                data-id="{{:id}}"
+                data-position="{{:#getIndex()}}")
+
+                td.center
+                  | {{:id}}
+
+                td.center.isEnabled
+                    |{{if situationDetail.isEnabled == 1 }}
+                    .enabled: <i class="fa fa-apple" aria-hidden="true"></i> 有効
+                    | {{/if}}
+
+                    |{{if situationDetail.isEnabled == 0 }}
+                    .disabled: <i class="fa fa-apple" aria-hidden="true"></i> 無効
+                    | {{/if}}
+
+                    |{{if situationDetail.isEnabled == 2 }}
+                    .test: <i class="fa fa-apple" aria-hidden="true"></i> テスト公開
+                    | {{/if}}
+
+                //- td.center
+                //-   | {{:type}}
+
+                td.center
+                  | {{if type == "normal"}}{{:category}}{{/if}}
+                  | {{if type == "timezoneSuggest"}}{{:timezone}}{{/if}}
+
+                td.center
+                    img(src="{{:iconImagePath}}" style="background: #333;")
+
+                td.center
+                    | {{if bannerSize == 'normal'}}
+                    img.smallBanner(src="{{:buttonImagePath}}" alt ="通常バナー")
+                    | {{/if}}
+                    | {{if bannerSize == 'large'}}
+                    img.largeBanner(src="{{:buttonImagePath}}" alt="バナー大")
+                    | {{/if}}
+
+                td
+                    | {{:situationDetail.characterName}}<br>
+                    | <strong>{{:situationDetail.situationName}}</strong><br>
+                    | ({{:situation.code}})
+
+                td.center.isPayment
+                    |{{if situation.isPayment == 1 }}
+                    .payment 有料
+                    | {{/if}}
+                    |{{if situation.isPayment == 0 }}
+                    .free 無料
+                    | {{/if}}
+
+                td
+                    | {{if timestamps}}{{:timestamps.update}}{{/if}}
+
+
+            | {{/for}}

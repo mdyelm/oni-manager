@@ -1,0 +1,212 @@
+extends ../_includes/_layout
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append variables
+    - var pageTitle = "全般設定 - 鬼マネージャー";
+    - var pageCode = "generalSettings";
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append css
+    link(rel='stylesheet', href='/stylesheets/pages/generalSettings.scss')
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append js
+    script.
+        var onidenAdmin = {}
+
+        // データ読み込み
+        onidenAdmin.data = !{JSON.stringify(data)};
+        console.log(onidenAdmin.data);
+
+
+    script(src="/javascripts/pages_compiled/generalSettings/main.js")
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block templates
+    include ../_includes/jsrender/_modules/_listEditor
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block content
+
+    .pageHeader
+        h1 <i class="fa fa-cog" aria-hidden="true"></i> 全般設定
+        p.description アプリ全体の設定や各管理項目自体の設定が行えます。
+        +message
+
+    .pageContent
+
+        // ---------------------------------------------------------------------
+        form(action="/generalSettings" method="post")
+            input(type="submit" class="hidden")
+            input(type="hidden" name="_method" value="PUT")
+            section
+                h2 基本
+                .formGroup
+                    .row
+                        .col-12
+                            .formItem
+                                .label メモ
+                                .input
+                                    textarea(name="SETTINGS_NOTE" placeholder="メモ") #{data.keyValues['SETTINGS_NOTE'].value}
+
+                    .row
+                        .col-12
+                            .formItem
+                                .label アプリバージョン
+                                .input
+                                    p.description.
+                                        目的：更新訴求（強制ではない）<br>
+                                        条件：アプリ自体のバージョンとappVersionを比較し新しい場合はモーダル表示<br>
+                                        ダウンロード対象：なし（ストア遷移のモーダルのみ）<br>
+                                        バージョンの頭に#を付けると出力されないようにできます。(例：#3.0.1)
+
+                                    table
+                                        tr
+                                            th ---
+                                            th 共通
+                                            each language in data.languages
+                                                th #{language.name}
+                                        tr
+                                            th iOS
+                                            td.center
+                                                input(
+                                                    type="text"
+                                                    name="SETTINGS_APPVERSION_IOS"
+                                                    value=data.keyValues.SETTINGS_APPVERSION_IOS.value
+                                                    placeholder="例：2.14.2"
+                                                    required
+                                                )
+                                                each language in data.languages
+                                                    td.center ---
+                                        tr
+                                            th Android
+                                            td.center ---
+                                            each language in data.languages
+                                                td.center
+                                                    input(
+                                                        type="text"
+                                                        name="SETTINGS_APPVERSION_ANDROID_"+language.code.toUpperCase()
+                                                        value=data.keyValues['SETTINGS_APPVERSION_ANDROID_'+language.code.toUpperCase()].value
+                                                        placeholder="例：2.14.2"
+                                                        required
+                                                    )
+
+                                    p.notice ※iOSは1アプリ内で多言語対応しているため、アプリバージョンは一つのみとなります。
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label zipバージョン
+                                    .input
+                                        p.description.
+                                            目的：メニューの最新情報をユーザーにダウンロードさせるため<br>
+                                            条件：キャッシュしているzipVersionより起動時に取得したplistのversionが新しい場合に対象をダウンロード<br>
+                                            ダウンロード対象：メニューのzip
+
+                                        table
+                                            tr
+                                                th ---
+                                                each language in data.languages
+                                                    th #{language.name}
+                                            tr
+                                                th iOS
+                                                each language in data.languages
+                                                    td
+                                                        input(
+                                                            type="text"
+                                                            name="SETTINGS_ZIPVERSION_IOS_"+language.code.toUpperCase()
+                                                            value=data.keyValues['SETTINGS_ZIPVERSION_IOS_'+language.code.toUpperCase()] ? data.keyValues['SETTINGS_ZIPVERSION_IOS_'+language.code.toUpperCase()].value : ""
+                                                            placeholder="例：1.39"
+                                                            required
+                                                        )
+                                            tr
+                                                th Android
+                                                each language in data.languages
+                                                    td
+                                                        input(
+                                                            type="text"
+                                                            name="SETTINGS_ZIPVERSION_ANDROID_"+language.code.toUpperCase()
+                                                            value=data.keyValues['SETTINGS_ZIPVERSION_ANDROID_'+language.code.toUpperCase()] ? data.keyValues['SETTINGS_ZIPVERSION_ANDROID_'+language.code.toUpperCase()].value : ""
+                                                            placeholder="例：1.39"
+                                                            required
+                                                        )
+
+                h2 お知らせ
+                .formGroup
+                    .row
+                        .col-12
+                            .formItem
+                                .label お知らせページURL
+                                .input
+                                    p.description お知らせページの公開先URLです。テスト版は「#{data.topicsTestUrl}+ページ名」固定です。(config/production.jsonから変更可能)
+                                    table
+                                        each language in data.languages
+                                            each os in data.os
+                                                tr
+                                                    td #{language.name} / #{os.name}
+                                                    td
+                                                        if ( data.keyValues['SETTINGS_TOPICS_URL_'+language.code.toUpperCase()+"_"+os.code.toUpperCase()] )
+                                                            - var value = data.keyValues['SETTINGS_TOPICS_URL_'+language.code.toUpperCase()+"_"+os.code.toUpperCase()].value;
+                                                        input(
+                                                            type="url"
+                                                            name="SETTINGS_TOPICS_URL_"+language.code.toUpperCase()+"_"+os.code.toUpperCase()
+                                                            value=value
+                                                            placeholder="http://"
+                                                            required
+                                                        )
+                    .row
+                        .col-12
+                            .formItem
+                                .label お知らせページ<br>フッターHTML
+                                .input
+                                    p.description お知らせページ出力時にフッター部分へ挿入されるHTMLを記載します。(主に広告タグなど)
+                                    .topicsFooterHTMLListEditor.listEditor
+                                    textarea(name="TOPICS_FOOTER_HTML" placeholder="JSON" style="display:none") #{data.keyValues['TOPICS_FOOTER_HTML']}
+
+                h2 メニュー管理
+                .formGroup
+                    .row
+                        .col-12
+                            .formItem
+                                .label カテゴリ定義
+                                .input
+                                    .categoryListEditor.listEditor
+                                    textarea(name="SETTINGS_CATEGORIES" placeholder="JSON" style="display: none;") #{data.keyValues['SETTINGS_CATEGORIES']}
+
+                    //- .row
+                    //-     .col-12
+                    //-         .formItem
+                    //-             .label タイムゾーン定義
+                    //-             .input
+                    //-                 .timezoneListEditor.listEditor
+                    //-                 textarea(name="SETTINGS_TIMEZONES" placeholder="JSON" style="display:none;") #{data.keyValues['SETTINGS_TIMEZONES']}
+
+                h2 その他
+                .formGroup
+                    .row
+                        .col-8
+                            .formItem
+                                .label APIバージョン
+                                .input
+                                    p.description
+                                        | plistや素材取得の仕様が大きく変わった際に変更します。<br>
+                                        | 出力ファイルのディレクトリ名に関係します。( /public/v1_4/のv1_4 )
+                                    input.short(
+                                        type="text"
+                                        name="SETTINGS_APIVERSION"
+                                        value=data.keyValues['SETTINGS_APIVERSION'].value
+                                        placeholder="例：v1_5"
+                                        pattern="v[0-9_]*"
+                                        required
+                                    )
+
+            .menu
+                .button.actionSaveSettings 設定を保存
+
+
+        // ----------------------------------------------------------------------

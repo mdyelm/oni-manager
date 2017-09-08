@@ -1,0 +1,45 @@
+mixin message
+    if message && message.text
+        - var messageClass = (!message.err) ? "success" : "error";
+        .message(class=messageClass)
+            .messageTitle
+                | !{message.text}
+
+            if message.deletedFiles || message.err
+                .messageDetail
+                    if message.deletedFiles && message.deletedFiles.length
+                        div.deleteImagesMessage
+                            h2 削除した不要画像：
+                            ul
+                            each filePath in message.deletedFiles
+                                li=filePath
+                    if message.err
+                        p=message.err
+
+
+mixin enviromentSelector
+    .enviromentSelector
+        .languageSelect
+            each language, index in data.languages
+                if index == 0
+                    .languageItem.selected(data-language-id=language.id)
+                        | <i class="fa fa-globe" aria-hidden="true"></i> #{language.name}
+                else
+                    .languageItem(data-language-id=language.id)
+                        | <i class="fa fa-globe" aria-hidden="true"></i> #{language.name}
+
+        .osSelect
+            each os, index in data.os
+                if index == 0
+                    .osItem.selected(data-os-id=os.id)
+                        if (os.code == "android")
+                            | <i class="fa fa-android" aria-hidden="true"></i> #{os.name}
+                        else if (os.code=="ios")
+                            | <i class="fa fa-apple" aria-hidden="true"></i> #{os.name}
+
+                else
+                    .osItem(data-os-id=os.id)
+                        if (os.code == "android")
+                            | <i class="fa fa-android" aria-hidden="true"></i> #{os.name}
+                        else if (os.code=="ios")
+                            | <i class="fa fa-apple" aria-hidden="true"></i> #{os.name}

@@ -1,0 +1,158 @@
+script(type="text/html" id="edit")
+    .paneInner
+
+        .paneHeader
+            .paneTitle メニュー項目の{{:actionName}}
+
+            .buttonClose.actionCloseCurrentSidePane
+                | <i class="fa fa-times" aria-hidden="true"></i>
+
+        .paneContent
+            .menus
+                form(id="editForm" action="{{:formActionURL}}" method="post")
+                    input(type="submit" class="hidden")
+                    input(type="hidden" name="_method" value="{{:formMethod}}")
+                    input(type="hidden" name="language_id" value="{{if item.languageId}}{{:item.languageId}}{{/if}}")
+                    input(type="hidden" name="os_id" value="{{if item.osId}}{{:item.osId}}{{/if}}")
+
+                    //- ===================================================
+
+                    .formGroup
+                        p(class="mesError" style="display:none" data-id="{{:dpErr}}") 他の画面及び人に更新されているため、保存できません
+                        .formGroupTitle 基本設定
+                        .row
+                            .col-12
+                                .formItem
+                                    input(
+                                        type="hidden"
+                                        name="updateErr"
+                                        value="{{:item.timestamps.updateErr}}"
+                                    )
+                                    .label 種類
+                                    .input
+                                      label(class="{{if item.type == 'normal' || item.type == null}}selected{{/if}}")
+                                          | <input class="actionShowCategoryRelated" type="radio" name="type" value="normal" {{if item.type == "normal" || item.type == null}}checked="checked"{{/if}}>
+                                          | 通常
+                                    //-   label
+                                    //-       | <input class="actionShowTimezoneSuggestRelated" type="radio" name="type" value="timezoneSuggest" {{if item.type == "timezoneSuggest"}}checked="checked"{{/if}}>
+                                    //-       | 時間帯おすすめ
+                        .row(class="chainCategoryRelated {{if item.type == 'timezoneSuggest'}}hidden{{/if}}")
+                            .col-12
+                                .formItem
+                                    .label 表示するカテゴリ
+                                    .input
+                                        select(name="category")
+                                            | {{for categories}}
+                                            | <option value="{{:code}}" {{if code == ~root.item.category}}selected{{/if}}> {{:name}}
+                                            | {{/for}}
+
+                        //- .row(class="chainTimezoneSuggestRelated {{if item.type == 'normal' || item.type == null}}hidden{{/if}}")
+                        //-     .col-12
+                        //-         .formItem
+                        //-             .label 表示する時間帯
+                        //-             .input
+                        //-                 select(name="timezone")
+                        //-                     | {{for timezones}}
+                        //-                     | <option value="{{:code}}" {{if value == ~root.item.timezone}}selected{{/if}}> {{:name}}
+                        //-                     | {{/for}}
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 再生する<br>シチュエーション
+                                    .input
+                                        select(name="situation_id")
+                                            | {{for situationDetails}}
+                                            | <option value="{{:situationId}}" {{if situationId == ~root.item.situationId}}selected{{/if}}> {{:situation.id}} ({{:situation.code}}) {{:characterName}} - {{:situationName}}</option>
+                                            | {{/for}}
+                                        //- input(type="text" name="situation_id" value="{{if item.situationId}}{{:item.situationId}}{{/if}}")
+                                        //- .situationInfo
+                                        //-     .thumbnail
+                                        //-         img(src="{{:item.situationDetail.callBackgroundImagePath}}")
+                                        //-     .situationTitle {{:item.situationDetail.situationName}}
+                                        //-     .situationCharacterName {{:item.situationDetail.characterName}}
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label メモ<br>※出力なし
+                                    .input
+                                        textarea(name="note" rows=8) {{:item.note}}
+
+                    //- ===================================================
+
+                    .formGroup
+                        .formGroupTitle バナー設定
+                        .row
+                            .col-12
+                                .formItem
+                                    .label サイズ
+                                    .input
+                                        label(class="{{if item.bannerSize == 'normal' || item.bannerSize == undefined}}selected{{/if}}")
+                                            | <input type="radio" name="banner_size" value="normal" {{if item.bannerSize == 'normal' || item.bannerSize == undefined}}checked="checked"{{/if}}>
+                                            | 標準
+                                        label(class="{{if item.bannerSize == 'large'}}selected{{/if}}")
+                                            | <input type="radio" name="banner_size" value="large" {{if item.bannerSize == 'large'}}checked="checked"{{/if}}>
+                                            | バナー大
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label ボタン背景<br>小：378px x 87px<br>大：378px x 142px
+                                    .input
+                                        .backgroundUploader.recycleUploader
+                                            .field
+                                                .preview
+                                                    img(src="{{:item.buttonImagePath}}")
+                                                .input
+                                                    input(type="text" name="button_image_path" value="{{:item.buttonImagePath}}" placeholder="未選択")
+                                                    .button(class="actionShowPopup") 選択
+
+                                            .popup.hidden
+                                                .button.buttonPopupClose(class="actionClosePopup") ×
+                                                .preview
+                                                    img(src="{{:item.buttonImagePath}}")
+                                                .input
+                                                    input(type="text" value="{{:item.buttonImagePath}}")
+                                                    .button.actionRemove 削除
+                                                .upload
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label アイコン<br>76px x 72px
+                                    .input
+                                        .iconUploader.recycleUploader
+                                            .field
+                                                .preview
+                                                    img(src="{{:item.iconImagePath}}")
+                                                .input
+                                                    input(type="text" name="icon_image_path" value="{{:item.iconImagePath}}" placeholder="未選択")
+                                                    .button(class="actionShowPopup") 選択
+
+                                            .popup.hidden
+                                                .button.buttonPopupClose(class="actionClosePopup") ×
+                                                .preview
+                                                    img(src="{{:item.iconImagePath}}")
+                                                .input
+                                                    input(type="text" value="{{:item.iconImagePath}}")
+                                                    .button.actionRemove 削除
+                                                .upload
+
+                    .formGroup
+                        .formGroupTitle 基本設定
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 順番
+                                    .input
+                                        input.short(type="text" name="position" value="{{:item.position}}" readonly)
+                                        p ※基本的に直接編集しないでください
+
+
+        .paneFooter
+            .menu
+                .button.buttonSave.actionSave {{:saveActionName}}する
+                |{{if id}}
+                .button.actionDelete(data-id="{{:id}}") 削除する
+                | {{/if}}

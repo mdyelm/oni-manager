@@ -1,0 +1,44 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var config = require("config");
+var express = require('express');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var viewController = require('../controllers/deploy/deployViewController');
+var apiController = require('../controllers/deploy/deployApiController');
+var recycleUploader = require('../controllers/_modules/recycleUploader');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var router = express.Router();
+
+router.use(function checkAuth( req, res, next ){
+    if (!req.user) { res.redirect('/login'); return } // セッション確認
+    if ( req.user.role != "admin" ) { res.redirect('/dashboard'); return } // 権限確認
+    next();
+})
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// View
+router.get('/', viewController.index); // 一覧表示
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// API
+
+router.get('/topic/test', apiController.testTopicDeploy);
+router.post('/topic/production', apiController.productionTopicDeploy);
+
+router.get('/test', apiController.testDeploy );
+router.get('/export/production', apiController.productionExport );
+router.get('/fullzip/production', apiController.productionFullZip );
+router.post('/production', apiController.productionDeploy );
+router.post('/production/full', apiController.productionFullDeploy );
+
+
+// バックアップ管理用
+router.get('/backup', recycleUploader.getFileList );
+router.post('/backup', recycleUploader.save );
+router.delete('/backup/:fileName', recycleUploader.remove );
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+module.exports = router;

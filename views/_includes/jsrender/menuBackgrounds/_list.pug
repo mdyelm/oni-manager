@@ -1,0 +1,62 @@
+script(type="text/html" id="list")
+    .info
+        .resultCount
+            span {{:listData.length}}
+            | 件の背景を表示中
+
+    .list
+        table
+            tr.header
+                th.center ID
+                //- th.center ステータス
+                th.center 適用画像
+                th 背景名
+                th 表示開始日時
+                th 表示終了日時
+                th.center バージョン
+                th 最終更新
+
+            | {{for listData}}
+            tr.item(
+                class="{{if isEnabled == 0}}disabled{{/if}}"
+                data-id="{{:id}}"
+                data-languageId="{{:languageId}}"
+                data-osId="{{:osId}}"
+            )
+
+                td.center
+                    | {{:id}}
+
+                //- td.center.isEnabled
+                //-     |{{if isEnabled == 1 }}
+                //-     .enabled 有効
+                //-     | {{/if}}
+                //-
+                //-     |{{if isEnabled == 0 }}
+                //-     .disabled 無効
+                //-     | {{/if}}
+
+                td.center
+                    img(src="{{:imagePath}}")
+
+                td
+                    strong {{:name}}
+
+                //- td.isEnabled
+                //-     div(class="{{enableClass:isEnabled}}")
+                //-         .enable 有効
+                //-         .disable 無効
+
+                td
+                    | {{:startDate}}
+
+                td
+                    | {{:endDate}}
+
+                td.center
+                    | {{:version}}
+
+                td
+                    | {{:timestamps.update}}
+
+            | {{/for}}

@@ -1,0 +1,104 @@
+script(type="text/html" id="list")
+    tr.header
+        th.center(rowspan=1) ID
+        th(rowspan=1) シチュエーション名
+        th.center(rowspan=1) 課金
+        | {{for languages}}
+        th.center(colspan=1) {{:name}}
+        | {{/for}}
+        th(rowspan=1) 最終更新日
+    tr.header
+        | {{for languages}}
+        //- th 有効/無効
+        //- th メニュー表示
+        //- th 金額
+        //- th バージョン
+        | {{/for}}
+    | {{for situations}}
+    tr.item(data-id="{{:id}}" class="{{if isAllEnvDisabled == true}}disabled{{/if}}")
+        td.center.id {{:id}}
+        td.name
+            .thumbnail
+                img(src="{{jsonParser:details.jp.ios.sceneSets 'callBackgroundImagePath' 0}}")
+            .situationName
+                strong: situationName {{:details.jp.ios.situationName}} ({{:code}})
+            .characterName
+                span {{:details.jp.ios.characterName}}
+
+        td.center.isPayment
+            |{{if isPayment == 1 }}
+            .payment 有料
+            | {{/if}}
+
+            |{{if isPayment != 1 }}
+            .free 無料
+            | {{/if}}
+
+        //- /////////////////////////////////////////////////////////////////////////////////////////////
+
+        | {{for ~root.languages ~details=details}}
+
+        td.center.isEnabled
+            .ios(class="{{enableClass:~root.situations.isEnabled}}")
+
+                |{{if ~details[code].ios.isEnabled == 1 }}
+                .enabled: <i class="fa fa-apple" aria-hidden="true"></i> 有効
+                | {{/if}}
+
+                |{{if ~details[code].ios.isEnabled == 0 }}
+                .disabled: <i class="fa fa-apple" aria-hidden="true"></i> 無効
+                | {{/if}}
+
+                |{{if ~details[code].ios.isEnabled == 2 }}
+                .test: <i class="fa fa-apple" aria-hidden="true"></i> テスト公開
+                | {{/if}}
+
+            .android(class="{{enableClass:isEnabled}}")
+                |{{if ~details[code].android.isEnabled == 1 }}
+                .enabled: <i class="fa fa-android" aria-hidden="true"></i> 有効
+                | {{/if}}
+                |{{if ~details[code].android.isEnabled == 0 }}
+                .disabled: <i class="fa fa-android" aria-hidden="true"></i> 無効
+                | {{/if}}
+                |{{if ~details[code].android.isEnabled == 2 }}
+                .test: <i class="fa fa-android" aria-hidden="true"></i> テスト公開
+                | {{/if}}
+
+        //- td.isMenuVisible.jp
+        //-     .ios(class="{{visibleClass:isMenuVisible}}")
+        //-         |{{if ~details[code].ios.isEnabled != 1 }}
+        //-         .visible 表示中
+        //-         | {{/if}}
+        //-         |{{if ~details[code].ios.isEnabled != 1 }}
+        //-         .hidden 非表示
+        //-         | {{/if}}
+        //-
+        //-     .android(class="{{visibleClass:isMenuVisible}}")
+        //-         |{{if ~details[code].android.isEnabled != 1 }}
+        //-         .visible 表示中
+        //-         |{{if ~details[code].android.isEnabled != 1 }}
+        //-         .hidden 非表示
+        //-         | {{/if}}
+
+        //- td.isPayment.jp
+        //-     .ios(class="{{paymentClass:isPayment}}")
+        //-         .pay  有料
+        //-         .free  無料
+        //-     .android(class="{{paymentClass:isPayment}}")
+        //-         .pay 有料
+        //-         .free 無料
+
+        //- td.version.jp
+        //-     .ios
+        //-         span {{:~details[code].ios.storeText }}
+        //-     .android
+        //-         | v
+        //-         span {{:version}}
+
+        | {{/for}}
+
+        //- /////////////////////////////////////////////////////////////////////////////////////////////
+
+        td.lastUpdate
+            span {{:timestamps.update}}
+    | {{/for}}

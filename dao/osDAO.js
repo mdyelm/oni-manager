@@ -1,0 +1,94 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var config = require("config");
+var moment = require('moment-timezone');
+moment.tz.setDefault("Asia/Tokyo");
+var path = require("path");
+var vsprintf = require("sprintf-js").vsprintf;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var knex = require(process.cwd() + '/util//mysqlConnection');
+var maUtil = require(process.cwd() + '/util//maUtil');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DAO
+var baseDAO = require(process.cwd() + "/dao/_includes/_baseDAO") ;// PROTOTYPE
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+    - DB構築
+    - DB・フロント用スキーマ定義
+    - OS一覧取得
+*/
+
+var osDAO = {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DB構築
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    setup: function(){
+        return new Promise(function(resolve, reject){
+
+            baseDAO.setup({
+                tableName: "os",
+                createTable: function(table){
+
+                    table.charset("utf8");
+                    table.collate("utf8_general_ci");
+
+                    table.increments(); // id
+                    table.string("code");
+                    table.string("name");
+
+                    table.timestamps();
+
+                },
+                defaultRecords: [
+                    { "code": "ios", "name": "iOS" },
+                    { "code": "android", "name": "Android" },
+                ]
+            }).then(function(){
+                resolve();
+            }).catch(function(err){
+                maUtil.dumpError(err);
+                reject(err);
+            });
+
+        });
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DB・フロント用スキーマ定義
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    setFrontendSchema: function( dbRow ){
+        return dbRow;
+    },
+
+    setDBSchema: function( item ){
+        return item;
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // OS一覧取得
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    fetch: function(){
+        var _setFrontendSchema = this.setFrontendSchema;
+
+        return new Promise(function(resolve, reject){
+
+            baseDAO.fetch({
+                tableName: "os",
+                setFrontendSchema: _setFrontendSchema,
+            }).then(function( result ){
+                resolve(result);
+            }).catch(function( err ){
+                maUtil.dumpError(err);
+                reject();
+            });
+
+        });
+    },
+
+}
+
+module.exports = osDAO;

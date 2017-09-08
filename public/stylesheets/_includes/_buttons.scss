@@ -1,0 +1,84 @@
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+%button {
+    display: inline-block;
+    padding: 10px;
+    min-width: 180px;
+    background: linear-gradient(0deg, rgba(230, 230, 230, 1), rgba(245,245,245,1));
+    color: #555;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 10px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+
+    &:hover {
+        color: #333;
+    }
+
+    i {
+        margin-right: 5px;
+    }
+
+    & + &{
+        margin-left: 20px;
+    }
+
+}
+
+%buttonImportant {
+    @extend %button;
+    background: rgba(30,50,80, 1);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: bold;
+
+    &:hover {
+        color: rgba(255, 255, 255, 1);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+.button {
+    @extend %button;
+}
+
+.buttonPrimary {
+    @extend %button;
+    background: rgba(100,100,100, 1);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: bold;
+
+    &:hover {
+        color: rgba(255, 255, 255, 1);
+    }
+
+}
+
+.buttonDanger {
+    @extend %button;
+    background: linear-gradient(0deg, rgba(171, 57, 34, 1),rgba(209, 77, 50, 1));
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: bold;
+
+    &:hover {
+        color: rgba(255, 255, 255, 1);
+    }
+}
+
+.buttonUpload {
+    @extend %button;
+    background: rgba(100,100,100, 1);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: bold;
+
+    &:hover {
+        color: rgba(255, 255, 255, 1);
+    }
+}
+
+.buttonSave {
+    @extend %buttonImportant;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////

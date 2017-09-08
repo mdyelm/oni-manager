@@ -1,0 +1,196 @@
+@import "../_define";
+
+.recycleUploader {
+  position: relative;
+  margin: 0 0 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+
+
+
+  .field {
+
+    .preview {
+        margin: 0 0 20px 0;
+
+        img {
+            width: calc(320px/3);
+            height: calc(434px/3);
+            border:1px solid #ccc;
+            background: #eee;
+        }
+
+        audio,
+        video {
+            width: 100%;
+        }
+
+    }
+
+    .input {
+        input {display:none;}
+    }
+
+  }
+
+  .popup {
+    position: fixed;
+    display: block;
+    top: 20%;
+    left: 20%;
+    padding: 0;
+    width: calc(60% - 6px);
+    height: calc(60% - 6px);
+    border: 3px solid #ccc;
+    background: #fff;
+    z-index: 10;
+    box-shadow: 0px 3px 20px rgba(0,0,0,0.6);
+
+    .buttonPopupClose {
+      display: block;
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      padding: 0;
+      width: 48px;
+      height: 48px;
+      min-width: 0;
+      line-height: 48px;
+      text-align: center;
+      font-weight: bold;
+      z-index: 1000;
+      border-radius: 0;
+    }
+
+    .preview {
+        position: absolute;
+        width: calc(30% - 40px);
+        height: calc(100% - 40px);
+        margin: 0 0 20px 0;
+        padding: 20px;
+        background: #AEBCCA;
+
+        img {
+            width: 100%;
+            border:1px solid #ccc;
+            background: #eee;
+        }
+
+        audio,
+        video {
+            width: 100%;
+        }
+
+    }
+
+    .path {
+
+    }
+
+    .input {
+        display: none;
+    }
+
+    .upload {
+        position: absolute;
+        top: 0;
+        left: 30%;
+        width: 70%;
+        height: 100%;
+
+      .list {
+          position: absolute;
+          top: 0;
+          width: 100%;
+          height: calc(100% - 70px);
+          overflow-y: scroll;
+
+          .fileList {
+              margin: 0 0 0 0;
+              border: 1px solid #aaa;
+              padding: 0;
+          }
+
+          .fileList .fileListItem {
+              position: relative;
+              border-bottom: 1px solid #eee;
+              padding: 10px 44px 10px 44px;
+              list-style: none;
+              font-size: 12px;
+              cursor: pointer;
+
+              &:hover {
+                  background: #eee;
+              }
+
+              &.selected {
+                  background: $color_active;
+                  color: #fff;
+              }
+
+              .itemPreview {
+                  position: absolute;
+                  top: calc(50% - 12px);
+                  left: 10px;
+
+                  img {
+                      width: 24px;
+                      height: 24px;
+                      background: #aaa;
+                      @include zoomer;
+                  }
+
+              }
+
+              .buttonRemove {
+                  position: absolute;
+                  top: calc( 50% - 12px );
+                  right: 10px;
+                  padding: 0;
+                  min-width: 0;
+                  width: 24px;
+                  height: 24px;
+                  border: 0;
+                  background: none;
+                  text-align: center;
+                  line-height: 24px;
+                  box-shadow: none;
+
+                  i {
+                      margin: 0;
+                  }
+
+              }
+
+          }
+
+      }
+
+      .form {
+            position: absolute;
+            display: flex;
+            bottom: 0;
+            margin: 0;
+            padding: 15px;
+            width: calc(100% - 30px);
+            height: calc(70px - 30px);
+            background: #f5f5f5;
+
+            input[type=file] {
+                flex: 2;
+                margin: 0;
+            }
+
+            .menu {
+                flex: 1;
+            }
+
+      }
+
+    }
+
+  }
+
+
+}

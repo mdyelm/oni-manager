@@ -1,0 +1,64 @@
+extends ../_includes/_layout
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append variables
+    - var pageTitle = "お知らせ管理 - 鬼マネージャー";
+    - var pageCode = "topics";
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append css
+    link(rel='stylesheet', href='/stylesheets/pages/topics.scss')
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append js
+    script.
+        var onidenAdmin = {}
+        // データ読み込み
+        onidenAdmin.data = !{JSON.stringify(data)};
+        console.log(onidenAdmin.data);
+
+    script(src="/javascripts/pages_compiled/topics/main.js")
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block templates
+    include ../_includes/jsrender/topics/_edit
+    include ../_includes/jsrender/topics/_list
+    include ../_includes/jsrender/_modules/_recycleUploader
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block content
+
+    .pageHeader
+        h1 <i class="fa fa-bullhorn" aria-hidden="true"></i> お知らせ管理
+        p.description アプリのお知らせ画面に表示される内容を編集できます。
+        +enviromentSelector
+        +message
+
+        // ----------------------------------------------------------------------
+        .menu
+            a(class="button actionOpenAddPane") <i class="fa fa-plus" aria-hidden="true"></i> お知らせを追加する
+            a(class="button deleteImagesBtn" href="/topics/images/cleanup") <i class="fa fa-trash-o" aria-hidden="true"></i> 不要画像削除
+        // ----------------------------------------------------------------------
+
+
+    .pageContent
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 お知らせ一覧
+
+            .dataList.topics
+                .ios
+                .android
+
+        // ----------------------------------------------------------------------
+
+    .sideKicks
+
+        .sidePane.editPane

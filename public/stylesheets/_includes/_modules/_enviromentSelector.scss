@@ -1,0 +1,73 @@
+@import "../_define";
+
+.enviromentSelector {
+    margin: 0 0 20px 0;
+    background: rgba(0,0,0,0.1);
+    border-radius: 5px;
+
+    .languageSelect {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        max-width: 1000px;
+        border-radius: 5px;
+
+        .languageItem {
+            flex: 1;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: rgba(0,0,0,0.35);
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+
+            &.selected {
+                border: 1px solid #6c6255;
+                background: #6c6255;
+                color: #fff;
+            }
+
+            i {
+                font-size: 18px;
+            }
+
+        }
+
+    }
+
+    .osSelect {
+        display: flex;
+        flex-direction: row;
+        width: calc(100% - 2px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: rgba(165,143,127,0.1);
+        border-radius: 5px;
+
+        .osItem {
+            flex: 1;
+            margin: 10px;
+            padding: 10px;
+            max-width: 500px;
+
+            background: transparent;
+            color: rgba(0,0,0,0.35);
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+
+            &.selected {
+                color: #333;
+                background: rgba(255,255,255,0.5)
+            }
+
+            i {
+                font-size: 18px;
+            }
+
+        }
+
+    }
+
+}

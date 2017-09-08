@@ -1,0 +1,212 @@
+@import "../_includes/_define";
+@import "../_includes/_modules/_recycleUploader";
+
+.popupWarning {
+    position: fixed;
+    top: calc( 50% - 140px );
+    left: calc( 50% - 220px );
+    padding: 20px;
+    width: calc(480px - 40px);
+    height: calc(480px - 40px);
+    border: 10px solid darkred;
+    background: #fff;
+    text-align: center;
+    border-radius: 20px;
+    z-index: 300;
+
+    h1 {
+        color: darkred;
+    }
+
+    textarea {
+        min-height: 80px;
+    }
+
+    .input {
+        margin: 0 0 20px 0;
+        input {
+            background: #111;
+            color: #08F200;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            box-shadow: none;
+            border-radius: 5px;
+        }
+    }
+
+}
+
+
+section {
+
+    p {
+        margin: 20px;
+        padding: 0;
+        text-align: left;
+    }
+
+}
+
+.group {
+    display: flex;
+
+    &.groupVertical {
+        display: block;
+    }
+
+    .groupTestDeploy,
+    .groupProductionDeploy {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-radius: 20px;
+
+        h3 {
+            margin: 0 0 20px;
+        }
+
+    }
+
+    .groupTestDeploy {
+        flex: 1;
+    }
+
+    .groupProductionDeploy {
+        flex: 2;
+        border: 3px solid #d14d32;
+        h3 { color: #d14d32; }
+    }
+
+}
+
+.step {
+    padding: 10px 0;
+    border-bottom: 1px dotted #ccc;
+
+    h4 {
+        margin: 0 0 20px 0;
+    }
+
+    p {
+        margin: 0 0 20px 0;
+        padding: 0 10px;
+    }
+
+    .stepInner {
+        display: flex;
+    }
+
+    .subStep {
+        flex: 1;
+        margin: 20px;
+    }
+
+}
+
+.connector {
+    margin: 10px;
+    color: #58779d;
+    font-size: 24px;
+    text-align: center;
+}
+
+.diff {
+    position: relative;
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    text-align: left;
+    font-size: 12px;
+    height: 800px;
+    overflow-y:scroll;
+}
+
+.path {
+    margin: 0 0 20px 0;
+    padding: 10px;
+    background: #E8E2D3;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        text-align: left;
+        opacity: 0.9;
+    }
+
+    span {
+        font-weight: bold;
+    }
+
+}
+
+.flowList {
+    ul {
+        display: flex;
+        margin: 0 20px;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    ul li {
+        flex: 1;
+        position: relative;
+        margin: 0 0 0 0;
+        padding: 10px 10px 10px 30px;
+        height: 30px;
+        // border: 1px solid #aaa;
+        background: #e6ecf0;
+        color: #52626c;
+        text-align: center;
+        list-style: none;
+        font-size: 12px;
+
+        &::before {
+            content: " ";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            margin-top: -35px;
+            border-top: 35px solid #e6ecf0;
+            border-bottom: 35px solid #e6ecf0;
+            border-left: 20px solid #fff;
+            z-index: 99;
+        }
+
+        &::after {
+            content: " ";
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            margin-top: -25px;
+            border-top: 25px solid transparent;
+            border-bottom: 25px solid transparent;
+            border-left: 15px solid #e6ecf0;
+            z-index: 100;
+        }
+
+        &:first-child {
+            &::before {
+                display: none;
+            }
+        }
+
+        &:last-child {
+            background: #e4b945;
+            //color: #fff;
+            font-weight: bold;
+
+            &::before {
+                border-top: 35px solid #e4b945;
+                border-bottom: 35px solid #e4b945;
+            }
+
+            &::after {
+                display: none;
+            }
+        }
+
+    }
+}

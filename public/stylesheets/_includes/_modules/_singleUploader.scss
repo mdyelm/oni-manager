@@ -1,0 +1,10 @@
+@import "../_define";
+
+.singleUploader {
+    .input {
+        input { display: none; }
+    }
+    .upload {
+        input { margin: 0 0 10px 0; }
+    }
+}

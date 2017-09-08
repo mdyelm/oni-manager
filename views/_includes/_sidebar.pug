@@ -1,0 +1,72 @@
+.sidebar
+    h1
+        strong 鬼
+        | マネージャー
+
+    if ( auth && auth.role == "admin" )
+      .btnDeploy
+          a(href="/deploy") <i class="fa fa-upload" aria-hidden="true"></i> データ更新
+
+    .category
+        ul
+            - var current = ( pageCode == "dashboard" ) ? "current" : "";
+            li(class=current)
+                a(href="/") <i class="fa fa-tachometer" aria-hidden="true"></i> ダッシュボード
+
+    .category
+        h2 配信
+        ul
+            - var current = ( pageCode == "topics" ) ? "current" : "";
+            li(class=current)
+                a(href="/topics") <i class="fa fa-bullhorn" aria-hidden="true"></i> お知らせ
+
+    .category
+        h2 設定
+        ul
+            - var current = ( pageCode == "menus" ) ? "current" : "";
+            li(class=current)
+                a(href="/menus") <i class="fa fa-bars" aria-hidden="true"></i> メニュー項目
+
+            - var current = ( pageCode == "situations" ) ? "current" : "";
+            li(class=current)
+                a(href="/situations") <i class="fa fa-user-circle-o" aria-hidden="true"></i> シチュエーション
+
+            - var current = ( pageCode == "menuBackgrounds" ) ? "current" : "";
+            li(class=current)
+                a(href="/menuBackgrounds") <i class="fa fa-picture-o" aria-hidden="true"></i> メニュー背景
+
+            - var current = ( pageCode == "pickups" ) ? "current" : "";
+            li(class=current)
+                a(href="/pickups") <i class="fa fa-usd" aria-hidden="true"></i> ピックアップ枠
+
+            - var current = ( pageCode == "generalSettings" ) ? "current" : "";
+            li(class=current)
+                a(href="/generalSettings") <i class="fa fa-cog" aria-hidden="true"></i> 全般設定
+
+    .category
+        h2 その他
+        ul
+            if ( auth && auth.role == "admin" )
+                li
+                    a(href="/users") <i class="fa fa-user-circle" aria-hidden="true"></i> 管理ユーザー
+            li
+                a(href="http://api.media-active.co.jp/interstitial/list.php" target="_new") <i class="fa fa-picture-o" aria-hidden="true"></i> インターステイシャル
+
+    //- .category
+    //-     h2 管理画面
+    //-     ul
+    //-         li: a(href="/manager/users") ユーザー
+
+    if (auth)
+        .userInfo
+            p.userName #{auth.name}
+            p.userLevel
+              if ( auth && auth.role == "admin" )
+                | 管理者
+              else
+                | 編集者
+            .btnLogout
+                a(href="/logout") ログアウト
+
+    .bg
+        img(src="/images/bg.png" alt="")

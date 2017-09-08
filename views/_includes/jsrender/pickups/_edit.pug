@@ -1,0 +1,485 @@
+script(type="text/html" id="edit")
+    .paneInner
+
+        .paneHeader
+            .paneTitle ピックアップ広告の{{:actionName}}
+
+            .buttonClose.actionCloseCurrentSidePane
+                | <i class="fa fa-times" aria-hidden="true"></i>
+
+        .paneContent
+            .pickups
+                form(id="editForm" action="{{:formActionURL}}" method="post")
+                    input(type="submit" class="hidden")
+                    input(type="hidden" name="_method" value="{{:formMethod}}")
+                    input(type="hidden" name="language_id" value="{{if item.languageId}}{{:item.languageId}}{{/if}}")
+                    input(type="hidden" name="os_id" value="{{if item.osId}}{{:item.osId}}{{/if}}")
+
+                    //- ===================================================
+
+                    .formGroup
+                        p(class="mesError" style="display:none" data-id="{{:dpErr}}") 他の画面及び人に更新されているため、保存できません
+                        .formGroupTitle 基本設定
+                        .row
+                            .col-12
+                                .formItem
+                                    input(
+                                        type="hidden"
+                                        name="updateErr"
+                                        value="{{:item.timestamps.updateErr}}"
+                                    )
+                                    .label ステータス
+                                    .input
+                                        label(class="{{if item.isEnabled == 1 || item.isEnabled == null}}selected{{/if}}")
+                                            | <input type="radio" name="is_enabled" value="1" {{if item.isEnabled == 1 || item.isEnabled == null}}checked="checked"{{/if}}>
+                                            | 有効
+                                        label(class=" {{if item.isEnabled == 0}}selected{{/if}}")
+                                            <input type="radio" name="is_enabled" value="0" {{if item.isEnabled == 0}}checked="checked"{{/if}}>
+                                            | 無効
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label
+                                         | 広告名
+                                         span ※出力無し
+                                    .input
+                                        input(type="text" name="name" class="" value="{{:item.name}}")
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 掲載時間
+                                    .input
+                                        .row
+                                            .col-6
+                                                | 開始<br>
+                                                input.middle(type="date" name="adStartDate_date" value="{{getDate:item.adStartDate}}" required)
+                                                br
+                                                input.short(type="time" name="adStartDate_time" value="{{if item.adStartDate}}{{getTime:item.adStartDate}}{{else}}00:00{{/if}}" required)
+                                            .col-6
+                                                | 終了<br>
+                                                input.middle(type="date" name="adEndDate_date" value="{{getDate:item.adEndDate}}" required)
+                                                br
+                                                input.short(type="time" name="adEndDate_time" value="{{if item.adStartDate}}{{getTime:item.adEndDate}}{{else}}23:59{{/if}}" required)
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 表示時間
+                                    .input
+                                        input.short(type="number" name="ad_duration" class="" value="{{:item.adDuration}}" placeholder="例：30" required)
+                                        | 　秒
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 広告の種類
+                                    .input
+                                        label(class="{{if item.adType == 'normal' || item.adType == null }}selected{{/if}}")
+                                            | <input type="radio" name="ad_type" value="normal" {{if item.adType == "normal" || item.adType == null }}checked="checked"{{/if}}>
+                                            | 通常バナー
+                                        label(class="{{if item.adType == 'nativeAd'}}selected{{/if}}")
+                                            | <input type="radio" name="ad_type" value="nativeAd" {{if item.adType == "nativeAd"}}checked="checked"{{/if}}>
+                                            | ネイティブアド
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label
+                                        | 備考
+                                        span ※出力無し
+                                    .input
+                                        textarea(name="note" rows=8)
+                                            | {{:item.note}}
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label バージョン
+                                    .input
+                                        input.middle(type="text" name="version" value="{{if item.version}}{{:item.version}}{{else}}v1.0{{/if}}" required)
+                                        p.description 期間や画像の変更時にバージョンを上げてください
+
+                    //- ===================================================
+
+                    .formGroup.formGroupNormalAd(style="{{if item.adType == 'nativeAd'}}display:none;{{/if}}")
+                        .formGroupTitle 通常バナー設定
+                        .row
+                            .col-12
+                                .formItem
+                                    .label バナー画像<br>248px x 248px
+                                    .input
+                                        p.description
+                                        .bannerUploader.recycleUploader
+                                            .field
+                                                .preview
+                                                    img(src="{{:item.bannerImagePath}}")
+                                                .input
+                                                    input(type="text" name="banner_image_path" value="{{:item.bannerImagePath}}" placeholder="未選択")
+                                                    .button(class="actionShowPopup") 選択
+
+                                            .popup.hidden
+                                                .button.buttonPopupClose(class="actionClosePopup") ×
+                                                .preview
+                                                    img(src="{{:item.bannerImagePath}}")
+                                                .input
+                                                    input(type="text" value="{{:item.bannerImagePath}}")
+                                                .upload
+                        .row
+                            .col-12
+                                .formItem
+                                    .label リンク先
+                                    .input
+                                        input(type="url" name="link_url" value="{{:item.linkUrl}}" placeholder="http://")
+
+                    //- ===================================================
+
+                    .formGroup.formGroupNativeAd(style="{{if item.adType == 'normal' || item.adType == null}}display:none;{{/if}}")
+                        .formGroupTitle ネイティブアド設定
+                        .row
+                            .col-12
+                                .formItem
+                                    .label ネイティブアド名<br>※出力なし
+                                    .input
+                                        input(type="text" name="native_ad_name" value="{{:item.nativeAdName}}")
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 開始位置
+                                    .input
+                                        .row
+                                            .col-6
+                                                | 横
+                                                input.short(type="text" name="nativeAdSettings[startPositionLeft]" value="{{:item.nativeAdSettings.startPositionLeft}}")
+                                            .col-6
+                                                | 縦
+                                                input.short(type="text" name="nativeAdSettings[startPositionTop]" value="{{:item.nativeAdSettings.startPositionTop}}")
+
+                        //- ----------------------------------------------------------------------------------------------------
+                        //- 背景
+                        //- ----------------------------------------------------------------------------------------------------
+
+                        .formSubGroup
+                            .formSubGroupTitle
+                                | 背景
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                            .formSubGroupDetail
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 画像
+                                            .input
+                                                .nativeAdBackgroundUploader.recycleUploader
+                                                    .field
+                                                        .preview
+                                                            img(src="{{:item.nativeAdSettings.background.imagePath}}")
+                                                        .input
+                                                            input(type="text" name="nativeAdSettings[background][imagePath]" value="{{:item.nativeAdSettings.background.imagePath}}" placeholder="未選択")
+                                                            .button(class="actionShowPopup") 選択
+
+                                                    .popup.hidden
+                                                        .button.buttonPopupClose(class="actionClosePopup") ×
+                                                        .preview
+                                                            img(src="{{:item.nativeAdSettings.background.imagePath}}")
+                                                        .input
+                                                            input(type="text" value="{{:item.nativeAdSettings.background.imagePath}}")
+                                                        .upload
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示サイズ
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 幅
+                                                        input.short(type="text" name="nativeAdSettings[background][width]" value="{{:item.nativeAdSettings.background.width}}")
+                                                    .col-6
+                                                        | 高さ
+                                                        input.short(type="text" name="nativeAdSettings[background][height]" value="{{:item.nativeAdSettings.background.height}}")
+
+                        //- ----------------------------------------------------------------------------------------------------
+                        //- アイコン
+                        //- ----------------------------------------------------------------------------------------------------
+
+                        .formSubGroup
+                            .formSubGroupTitle
+                                | アイコン
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                            .formSubGroupDetail
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 開始位置
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 横
+                                                        input.short(type="text" name="nativeAdSettings[icon][positionLeft]" value="{{:item.nativeAdSettings.icon.positionLeft}}")
+                                                    .col-6
+                                                        | 縦
+                                                        input.short(type="text" name="nativeAdSettings[icon][positionTop]" value="{{:item.nativeAdSettings.icon.positionTop}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示サイズ
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 幅
+                                                        input.short(type="text" name="nativeAdSettings[icon][width]" value="{{:item.nativeAdSettings.icon.width}}")
+                                                    .col-6
+                                                        | 高さ
+                                                        input.short(type="text" name="nativeAdSettings[icon][height]" value="{{:item.nativeAdSettings.icon.height}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示エフェクト
+                                            .input
+                                                select(name="nativeAdSettings[icon][effect]")
+                                                    | {{for nativeAdEffects}}
+                                                    | <option value="{{:value}}" {{if value == ~root.item.nativeAdSettings.icon.effect}}selected{{/if}}> {{:name}}
+                                                    | {{/for}}
+
+                        //- ----------------------------------------------------------------------------------------------------
+                        //- 見出し
+                        //- ----------------------------------------------------------------------------------------------------
+
+                        .formSubGroup
+                            .formSubGroupTitle
+                                | 見出し
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                            .formSubGroupDetail
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示位置
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 横
+                                                        input.short(type="text" name="nativeAdSettings[headline][positionLeft]" value="{{:item.nativeAdSettings.headline.positionLeft}}")
+                                                    .col-6
+                                                        | 縦
+                                                        input.short(type="text" name="nativeAdSettings[headline][positionTop]" value="{{:item.nativeAdSettings.headline.positionTop}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示領域
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 幅
+                                                        input.short(type="text" name="nativeAdSettings[headline][width]" value="{{:item.nativeAdSettings.headline.width}}")
+                                                    .col-6
+                                                        | 高さ
+                                                        input.short(type="text" name="nativeAdSettings[headline][height]" value="{{:item.nativeAdSettings.headline.height}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 文字サイズ
+                                            .input
+                                                input.short(
+                                                    type="number"
+                                                    min="1"
+                                                    max="40"
+                                                    name="nativeAdSettings[headline][textSize]"
+                                                    value="{{if item.nativeAdSettings.headline.textSize}}{{:item.nativeAdSettings.headline.textSize}}{{else}}10{{/if}}"
+                                                )
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 文字の色
+                                            .input
+                                                input.short(type="color" name="nativeAdSettings[headline][color]" value="{{:item.nativeAdSettings.headline.color}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 影の色
+                                            .input
+                                                input.short(type="color" name="nativeAdSettings[headline][shadowColor]" value="{{:item.nativeAdSettings.headline.shadowColor}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label その他
+                                            .input
+                                                label
+                                                    | <input type="checkbox" name="nativeAdSettings[headline][font]" value="bold" {{if item.nativeAdSettings.headline.font == 'bold'}}checked="checked"{{/if}}>
+                                                    | 太字にする
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示エフェクト
+                                            .input
+                                                select(name="nativeAdSettings[headline][effect]")
+                                                    | {{for nativeAdEffects}}
+                                                    | <option value="{{:value}}" {{if value == ~root.item.nativeAdSettings.headline.effect}}selected{{/if}}> {{:name}}
+                                                    | {{/for}}
+
+                        //- ----------------------------------------------------------------------------------------------------
+                        //- 本文
+                        //- ----------------------------------------------------------------------------------------------------
+
+                        .formSubGroup
+                            .formSubGroupTitle
+                                | 本文
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                            .formSubGroupDetail
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示位置
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 横
+                                                        input.short(type="text" name="nativeAdSettings[body][positionLeft]" value="{{:item.nativeAdSettings.body.positionLeft}}")
+                                                    .col-6
+                                                        | 縦
+                                                        input.short(type="text" name="nativeAdSettings[body][positionTop]" value="{{:item.nativeAdSettings.body.positionTop}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示領域
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 幅
+                                                        input.short(type="text" name="nativeAdSettings[body][width]" value="{{:item.nativeAdSettings.body.width}}")
+                                                    .col-6
+                                                        | 高さ
+                                                        input.short(type="text" name="nativeAdSettings[body][height]" value="{{:item.nativeAdSettings.body.height}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 文字サイズ
+                                            .input
+                                                input.short(
+                                                    type="number"
+                                                    min="1"
+                                                    max="40"
+                                                    name="nativeAdSettings[body][textSize]"
+                                                    value="{{if item.nativeAdSettings.body.textSize}}{{:item.nativeAdSettings.body.textSize}}{{else}}10{{/if}}"
+                                                )
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 文字の色
+                                            .input
+                                                input.short(type="color" name="nativeAdSettings[body][color]" class="" value="{{:item.nativeAdSettings.body.color}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label その他
+                                            .input
+                                                label
+                                                    | <input type="checkbox" name="nativeAdSettings[body][font]" value="bold" {{if item.nativeAdSettings.body.font == 'bold'}}checked="checked"{{/if}}>
+                                                    | 太字にする
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示エフェクト
+                                            .input
+                                                select(name="nativeAdSettings[body][effect]")
+                                                    | {{for nativeAdEffects}}
+                                                    | <option value="{{:value}}" {{if value == ~root.item.nativeAdSettings.body.effect}}selected{{/if}}> {{:name}}
+                                                    | {{/for}}
+
+                        //- ----------------------------------------------------------------------------------------------------
+                        //- アクション
+                        //- ----------------------------------------------------------------------------------------------------
+
+                        .formSubGroup
+                            .formSubGroupTitle
+                                | アクション (アクション)
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                            .formSubGroupDetail
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示位置
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 横
+                                                        input.short(type="text" name="nativeAdSettings[action][postionLeft]" value="{{:item.nativeAdSettings.action.positionLeft}}")
+                                                    .col-6
+                                                        | 縦
+                                                        input.short(type="text" name="nativeAdSettings[action][positionTop]" value="{{:item.nativeAdSettings.action.positionTop}}")
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示領域
+                                            .input
+                                                .row
+                                                    .col-6
+                                                        | 幅
+                                                        input.short(type="text" name="nativeAdSettings[action][width]" value="{{:item.nativeAdSettings.action.width}}")
+                                                    .col-6
+                                                        | 高さ
+                                                        input.short(type="text" name="nativeAdSettings[action][height]" value="{{:item.nativeAdSettings.action.height}}")
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 文字サイズ
+                                            .input
+                                                input.short(
+                                                    type="number"
+                                                    min="1"
+                                                    max="40"
+                                                    name="nativeAdSettings[action][textSize]"
+                                                    value="{{if item.nativeAdSettings.action.textSize}}{{:item.nativeAdSettings.action.textSize}}{{else}}10{{/if}}"
+                                                )
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 文字の色
+                                            .input
+                                                input.short(type="color" name="nativeAdSettings[action][color]" class="" value="{{:item.nativeAdSettings.action.color}}")
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label その他
+                                            .input
+                                                label
+                                                    | <input type="checkbox" name="nativeAdSettings[action][font]" value="bold" {{if item.nativeAdSettings.action.font == "bold"}}checked="checked"{{/if}}>
+                                                    | 太字にする
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 表示エフェクト
+                                            .input
+                                                select(name="nativeAdSettings[action][effect]")
+                                                    | {{for nativeAdEffects}}
+                                                    | <option value="{{:value}}" {{if value == ~root.item.nativeAdSettings.action.effect}}selected{{/if}}> {{:name}}
+                                                    | {{/for}}
+
+        .paneFooter
+            .menu
+                .button.buttonSave.actionSave {{:saveActionName}}する
+                |{{if id}}
+                .button.actionDelete(data-id="{{:id}}") 削除する
+                | {{/if}}

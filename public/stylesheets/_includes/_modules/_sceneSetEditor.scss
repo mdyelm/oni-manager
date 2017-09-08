@@ -1,0 +1,187 @@
+@import "../_define";
+
+.sceneSetEditor {
+    display: flex;
+    margin: 0 0 20px 0;
+    border: 1px solid #bbb;
+    min-height: 75%;
+    background: #fff;
+
+    .sceneSetSelector {
+        flex: 0.1;
+        padding: 20px;
+        background: #ccc;
+
+        .sceneSetSelectList {
+          margin: 0 0 20px 0;
+        }
+
+        .sceneSetSelectListItem {
+          position: relative;
+          cursor: pointer;
+          margin: 0 0 10px 0;
+          padding: 10px;
+          min-height: 64px;
+          color: #333;
+          border-radius: 5px;
+
+          &:hover{
+            background: #fff;
+          }
+
+          &.selected {
+              background: #333;
+              color: #fff;
+          }
+
+          .buttonRemove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: inline-block;
+            min-width: 0;
+          }
+        }
+    }
+
+    ////////////////
+
+    .sceneSetList {
+        flex: 0.9;
+        padding: 20px;
+        background: #eee;
+    }
+
+    .group {
+        margin: 0 0 30px 0;
+
+        .groupTitle {
+            margin: 0 0 30px 0;
+            border-bottom: 2px solid #333;
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+    }
+
+    .sceneEditor {
+        margin: 0 0 30px 0;
+        display: flex;
+        align-items: stretch;
+        background: #fff;
+
+        .typeSelector {
+            display: flex;
+
+            .selectorItem {
+                flex: 1;
+                margin: 0 10px;
+                padding: 15px;
+                border: 1px solid #ccc;
+                background: #bbb;
+                text-align: center;
+                cursor: pointer;
+                border-radius: 10px 10px 0 0;
+
+                &.selected {
+                    margin-bottom: -1px;
+                    border-bottom: 1px solid #fff;
+                    background: #fff;
+                }
+
+                &:hover {
+                    background: #fff;
+                }
+
+            }
+
+        }
+
+        .scenes {
+            flex: 1;
+            padding: 20px;
+            background: #fff;
+            // max-height: 480px;
+            // overflow-y: scroll;
+
+            .sceneList {
+                margin: 0 0 20px 0;
+            }
+
+            .sceneList .sceneListItem {
+                display: flex;
+                padding: 10px;
+                border: 1px solid #ccc;
+
+                .itemDetail {
+                    position: relative;
+                    display: flex;
+                    flex: 1;
+                    align-items: stretch;
+
+                    .thumbnail {
+                        margin: 0;
+                        img {
+                            width: calc(320px/5);
+                            height: calc(434px/5);
+                            background: #eee;
+                            @include zoomer;
+                        }
+
+                    }
+
+                    .sceneNumber,
+                    .thumbnail,
+                    .sceneCharacterName,
+                    .sceneImage,
+                    .sceneDuration,
+                    .sceneMemo {
+                        padding: 10px;
+
+                        textarea {
+                            width: 100%;
+                        }
+
+                    }
+
+                    .sceneImage {
+                        .recycleUploader {
+                            padding: 0;
+                            border: 0;
+                        }
+                    }
+
+                    .sceneNumber {
+                        p {
+                            margin: 0;
+                            font-weight: bold;
+                            font-size: 24px;
+                        }
+                    }
+
+                    .buttonRemove {
+                      display: inline-block;
+                      position: absolute;
+                      top: 0;
+                      right: 0;
+                      min-width: 0;
+                    }
+
+                }
+
+            }
+
+            .menu {
+
+                .button {
+                    display: block;
+                }
+
+            }
+
+        }
+
+    }
+
+}

@@ -1,0 +1,51 @@
+$color_background: #E8E1D7;
+$color_pane: #4b6579;
+$color_active: rgba(30,30,70,1);
+$color_active_light: #ede4c0;
+$color_success: green;
+$color_error: red;
+$color_focus: #eee5b0;
+
+$color_header_text: #8E9A9C;
+
+@mixin box($size, $paddingSize: null) {
+    @if $size == "mini" {
+        $paddingSize: 10px;
+    } @else {
+        $paddingSize: 20px;
+    }
+
+    padding: $paddingSize;
+    border-radius: 3px;
+}
+
+@mixin menu( $fontColor: $color_pane ) {
+    display: block;
+    padding: 10px;
+    //border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+    border-radius: 5px;
+
+    &:hover {
+        background: #fff;
+        color: $fontColor;
+    }
+}
+
+@mixin transition( $property: null, $duration: "0.5s", $easing: "linear") {
+    -moz-transition: #{$property} #{$duration} #{$easing};
+    -webkit-transition: #{$property} #{$duration} #{$easing};
+    -ms-transition:  #{$property} #{$duration} #{$easing};
+    transition: #{$property} #{$duration} #{$easing};
+}
+
+@mixin zoomer(){
+    position: relative;
+    transition: transform 0.5s ease;
+    transition-delay: 0.2s;
+
+    &:hover {
+        transform: scale(5) translate3d(0px, 0px, 100px);
+        z-index: 12345;
+    }
+}

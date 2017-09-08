@@ -1,0 +1,83 @@
+extends ../_includes/_layout
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append variables
+    - var pageTitle = "メニュー項目管理 - 鬼マネージャー";
+    - var pageCode = "menus";
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append css
+    link(rel='stylesheet', href='/stylesheets/pages/menus.scss')
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append js
+    script.
+        var onidenAdmin = {}
+
+        // データ読み込み
+        onidenAdmin.data = !{JSON.stringify(data)};
+        console.log(onidenAdmin.data);
+
+    script(src="/javascripts/pages_compiled/menus/main.js")
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block templates
+    include ../_includes/jsrender/menus/_list
+    include ../_includes/jsrender/menus/_edit
+    include ../_includes/jsrender/_modules/_recycleUploader
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block content
+
+    .pageHeader
+        h1 <i class="fa fa-bars" aria-hidden="true"></i> メニュー項目管理
+        p.description トップに表示されるシチュエーション再生用メニューの追加・削除、並び順の変更ができます。
+        +message
+        +enviromentSelector
+
+        .menu
+            .button.actionOpenAddPane
+                | <i class="fa fa-plus" aria-hidden="true"></i> メニュー項目を追加する
+
+
+    .pageContent
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 メニュー項目一覧
+            .dataList.enabledMenuList
+            .menu
+                .button.buttonPrimary.actionSavePosition.hidden 並び順を保存する
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 シチュエーションが無効なメニュー項目
+            .dataList.disabledMenuList
+
+        // ----------------------------------------------------------------------
+
+        //- section
+        //-     h2 未設定のメニュー項目
+        //-
+        //-     .dataList.undefinedMenuList
+        //-         .info
+        //-             .resultCount
+        //-                 span --
+        //-                 | 件のメニューが未設定です
+        //-
+        //-         .list
+        //-             table
+
+        // ----------------------------------------------------------------------
+
+
+    .sideKicks
+
+        .sidePane.editPane

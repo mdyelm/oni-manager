@@ -1,0 +1,327 @@
+script(id="sceneSetEditor" type="text/x-jsrender")
+    .sceneSetSelector
+        .sceneSetSelectList
+            | {{for sceneSets}}
+            .sceneSetSelectListItem(class="actionSelectSceneSet" data-sceneset-id="{{:#index}}")
+                | {{if code}}{{:code}}{{else}}noname{{/if}}
+                .button.buttonRemove.actionRemoveSceneSet ×削除
+            | {{/for}}
+        .button.actionAddSceneSet ＋シーンセット追加
+
+    .sceneSetList
+        | {{for sceneSets}}
+        .sceneSetListItem.hidden(data-sceneset-id="{{:#index}}")
+            .group.meta
+                .groupTitle 基本
+                .row
+                    .col-4
+                        .formItem
+                            .label <span class="hint--bottom hint--info" data-hint="シーンセット複数時にフォルダ名として利用。mainMenu.plistに出力。">シーンセットコード</span><br>(半角英数字のみ)
+                            .input
+                                input(
+                                    data-fieldname="code"
+                                    type="text"
+                                    value="{{if code }}{{:code}}{{else}}noname{{/if}}"
+                                    placeholder="例：oni_random_a"
+                                    pattern="[0-9a-zA-Z_-]*"
+                                )
+
+                    .col-4
+                        .formItem
+                            .label Analyticsでの名称
+                            .input
+                                input(
+                                    data-fieldname="analyticsName"
+                                    type="text"
+                                    value="{{:analyticsName}}"
+                                    placeholder="例：A"
+                                )
+                    .col-4
+                        .formItem
+                            .label 再生割合<br>(複数時のみ有効)
+                            .input
+                                input.short(data-fieldname="selectRatio" type="number" value="{{:selectRatio}}" placeholder="例：50")
+
+            .group.call
+                .groupTitle 着信シーン
+
+                .row
+                    .col-6
+                        .formItem
+                            .label
+                                | キャラクター<br>電話番号
+                            .input
+                                input.middle(
+                                    type="text"
+                                    data-fieldname="phoneNumber"
+                                    value="{{:phoneNumber}}"
+                                    placeholder="例：581-0202-0202"
+                                )
+                .row
+                    .col-6
+                        .formItem
+                            .label
+                                | 画像
+                            .input
+                                .callBackgroundUploader.recycleUploader
+                                    .field
+                                        .preview
+                                            img(src="{{:callBackgroundImagePath}}")
+                                        .input
+                                            input.middle(
+                                                type="text"
+                                                data-fieldname="callBackgroundImagePath"
+                                                value="{{:callBackgroundImagePath}}"
+                                                placeholder="未選択"
+                                            )
+                                            .button(class="actionShowPopup") 選択
+
+                                    .popup.hidden
+                                        .button.buttonPopupClose(class="actionClosePopup") ×
+                                        .preview
+                                            img(src="{{:callBackgroundImagePath}}")
+                                        .input
+                                            input( type="text" value="{{:callBackgroundImagePath}}" )
+                                        .upload
+
+
+                    .col-6
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 着信音音量
+                                    .input
+                                        input(
+                                            type="range"
+                                            data-fieldname="callSoundVolume"
+                                            value="{{if callSoundVolume}}{{:callSoundVolume}}{{else}}1{{/if}}"
+                                            max="1"
+                                            step="0.1"
+                                        )
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label スペシャル着信音
+                                    .input
+                                        label(class="{{if isUseSpecialCallSound == 1 }}selected{{/if}}").
+                                            <input
+                                                type="radio"
+                                                data-fieldname="isUseSpecialCallSound"
+                                                value="1"
+                                                {{if isUseSpecialCallSound == 1 }}checked="checked"{{/if}}
+                                            >
+                                            設定する
+                                        label(class="{{if isUseSpecialCallSound == 0 || isUseSpecialCallSound == null }}selected{{/if}}").
+                                            <input
+                                                type="radio"
+                                                data-fieldname="isUseSpecialCallSound"
+                                                value="0"
+                                                {{if isUseSpecialCallSound == 0 || isUseSpecialCallSound == null }}checked="checked"{{/if}}
+                                            >
+                                            設定しない
+
+                                        .callSpecialSoundUploader.recycleUploader
+                                            .field
+                                                .preview
+                                                    audio(src="{{:specialCallSoundPath}}" controls="controls")
+                                                .input
+                                                    input.middle(
+                                                        type="text"
+                                                        data-fieldname="specialCallSoundPath"
+                                                        value="{{:specialCallSoundPath}}"
+                                                        placeholder="未選択"
+                                                    )
+                                                    .button(class="actionShowPopup") 選択
+
+                                            .popup.hidden
+                                                .button.buttonPopupClose(class="actionClosePopup") ×
+                                                .preview
+                                                    audio(src="{{:specialCallSoundPath}}" controls="controls")
+                                                .input
+                                                    input(type="text" value="{{:specialCallSoundPath}}")
+                                                .upload
+
+            .group.talk
+                .groupTitle 通話シーン
+
+                .sceneEditor(class="chainTypeImage {{if sceneType == 'video' }}hidden{{/if}}")
+                    .scenes
+                        .typeSelector
+                            .selectorItem.selected(class="actionSelectSceneType" data-scene-type="normal") 通常シーン
+                            .selectorItem(class="actionSelectSceneType" data-scene-type="repeatLastScene") (任意)リピート最終シーン
+
+                        .type(data-scene-type="normal")
+                            .sceneList
+                                |{{for scenes ~sceneSetId=#index}}
+                                .sceneListItem(data-sceneset-id="{{:~sceneSetId}}" data-scene-id="{{:#index}}" data-scene-type="normal")
+                                    .itemDetail
+                                        .sceneNumber
+                                            p {{:#index+1}}
+
+                                        .thumbnail
+                                            img(src="{{:sceneBackgroundImagePath}}")
+
+                                        .sceneImage
+                                            .sceneImageUploader.recycleUploader
+                                                .field
+                                                    //- .preview
+                                                    //-     img(src="{{:sceneBackgroundImagePath}}")
+                                                    .input
+                                                        input(data-fieldname="sceneBackgroundImagePath" type="text" value="{{:sceneBackgroundImagePath}}" placeholder="シーン画像 未選択")
+                                                        .button(class="actionShowPopup") 選択
+
+                                                .popup.hidden
+                                                    .button.buttonPopupClose(class="actionClosePopup") ×
+                                                    .preview
+                                                        img(src="{{:sceneBackgroundImagePath}}")
+                                                    .input
+                                                        input(type="text" value="{{:sceneBackgroundImagePath}}" placeholder="sceneBackgroundImagePath")
+                                                    .upload
+
+                                        .sceneDuration
+                                            | 表示時間<br>
+                                            input.short(data-fieldname="sceneDuration" type="number" value="{{:sceneDuration}}" placeholder="例：1")
+                                            | <br>秒
+
+                                        .sceneDuration
+                                            | (任意)フェードイン待ち時間<br>
+                                            input.short(data-fieldname="sceneFadeInDelay" type="number" value="{{:sceneFadeInDelay}}" placeholder="例：1" step="0.1")
+                                            | <br>秒
+
+                                        .sceneCharacterName
+                                            | (任意)キャラクター名<br>
+                                            input(data-fieldname="sceneCharacterName" type="text" value="{{:sceneCharacterName}}" placeholder="例：あかおに")
+
+                                        .sceneMemo(style="display:none")
+                                            textarea(data-fieldname="sceneMemo" placeholder="(任意)メモ　例：音声の内容など")
+                                                | {{:sceneMemo}}
+
+                                        .button.buttonRemove.actionRemoveScene ×削除
+                                | {{/for}}
+
+                            .menu
+                                .button.actionAddScene(data-scene-type="normal") ＋シーンを追加
+
+                        .type.hidden(data-scene-type="repeatLastScene")
+                            .sceneList
+                                |{{for repeatLastScenes ~sceneSetId=#index}}
+                                .sceneListItem(data-sceneset-id="{{:~sceneSetId}}" data-scene-id="{{:#index}}" data-scene-type="repeatLastScene")
+                                    .itemDetail
+                                        .sceneNumber
+                                            p {{:#index+1}}
+
+                                        .thumbnail
+                                            img(src="{{:sceneBackgroundImagePath}}")
+
+                                        .sceneImage
+                                            .sceneImageUploader.recycleUploader
+                                                .field
+                                                    //- .preview
+                                                    //-     img(src="{{:sceneBackgroundImagePath}}")
+                                                    .input
+                                                        input(data-fieldname="sceneBackgroundImagePath" type="text" value="{{:sceneBackgroundImagePath}}" placeholder="シーン画像未選択")
+                                                        .button(class="actionShowPopup") 選択
+
+                                                .popup.hidden
+                                                    .button.buttonPopupClose(class="actionClosePopup") ×
+                                                    .preview
+                                                        img(src="{{:sceneBackgroundImagePath}}")
+                                                    .input
+                                                        input(type="text" value="{{:sceneBackgroundImagePath}}" placeholder="sceneBackgroundImagePath")
+                                                    .upload
+
+                                        .sceneDuration
+                                            | 表示時間<br>
+                                            input.short(data-fieldname="sceneDuration" type="number" value="{{:sceneDuration}}" placeholder="例：1")
+                                            | <br>秒
+
+                                        .sceneDuration
+                                            | (任意)フェードイン待ち時間<br>
+                                            input.short(data-fieldname="sceneFadeInDelay" type="number" value="{{:sceneFadeInDelay}}" placeholder="例：1" )
+                                            | <br>秒
+
+                                        .sceneCharacterName
+                                            | (任意)キャラクター名<br>
+                                            input(data-fieldname="sceneCharacterName" type="text" value="{{:sceneCharacterName}}" placeholder="例：あかおに")
+
+
+                                        .sceneMemo(style="display:none")
+                                            textarea(data-fieldname="sceneMemo" placeholder="メモ　例：音声の内容など")
+                                                | {{:sceneMemo}}
+
+                                        .button.buttonRemove.actionRemoveScene ×削除
+                                | {{/for}}
+
+                            .menu
+                                .button.actionAddScene(data-scene-type="repeatLastScene") ＋シーンを追加
+
+                .media
+                    .row(class="chainTypeImage {{if sceneType == 'video' }}hidden{{/if}}")
+                        .col-6
+                            .formItem
+                                .label 音声
+                                .input
+                                    .sceneSoundUploader.recycleUploader
+                                        .field
+                                            .preview
+                                                audio(src="{{:sceneSoundPath}}" controls)
+                                            .input
+                                                input.middle(data-fieldname="sceneSoundPath" type="text" value="{{:sceneSoundPath}}" placeholder="未選択")
+                                                .button(class="actionShowPopup") 選択
+                                        .popup.hidden
+                                            .button.buttonPopupClose(class="actionClosePopup") ×
+                                            .preview
+                                                audio(src="{{:sceneSoundPath}}" controls)
+                                            .input
+                                                input(type="text" value="{{:sceneSoundPath}}")
+                                            .upload
+
+                        .col-6
+                            .formItem
+                                .label BGM
+                                .input
+                                    .sceneSoundBGMUploader.recycleUploader
+                                        .field
+                                            .preview
+                                                audio(src="{{:sceneSoundBGMPath}}" controls)
+                                            .input
+                                                input.middle(data-fieldname="sceneSoundBGMPath" type="text" value="{{:sceneSoundBGMPath}}" placeholder="未選択")
+                                                .button(class="actionShowPopup") 選択
+                                        .popup.hidden
+                                            .button.buttonPopupClose(class="actionClosePopup") ×
+                                            .preview
+                                                audio(src="{{:sceneSoundBGMPath}}" controls)
+                                            .input
+                                                input(type="text" value="{{:sceneSoundBGMPath}}")
+                                            .upload
+                                    | ボリューム　
+                                    input.short(
+                                        data-fieldname="sceneSoundBGMVolume"
+                                        type="number"
+                                        value="{{if sceneSoundBGMVolume}}{{:sceneSoundBGMVolume}}{{else}}1.0{{/if}}"
+                                        placeholder="音量"
+                                        step="0.1"
+                                    )
+
+                    .row(class="chainTypeVideo {{if sceneType == 'image'}}hidden{{/if}}")
+                        .col-8
+                            .formItem
+                                .label 動画
+                                .input
+                                    .sceneVideoUploader.recycleUploader
+                                        .field
+                                            .preview
+                                                video(src="{{:sceneVideoPath}}" controls)
+                                            .input
+                                                input.middle(data-fieldname="sceneVideoPath" type="text" value="{{:sceneVideoPath}}" placeholder="未選択")
+                                                .button(class="actionShowPopup") 選択
+                                        .popup.hidden
+                                            .button.buttonPopupClose(class="actionClosePopup") ×
+                                            .preview
+                                                video(src="{{:sceneVideoPath}}" controls)
+                                            .input
+                                                input(type="text" value="{{:sceneVideoPath}}")
+                                            .upload
+
+        | {{/for}}

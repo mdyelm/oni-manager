@@ -1,0 +1,65 @@
+extends ../_includes/_layout
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append variables
+    - var pageTitle = "ピックアップ枠管理 - 鬼マネージャー";
+    - var pageCode = "pickups";
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append css
+    link(rel='stylesheet', href='/stylesheets/pages/pickups.scss')
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append js
+    script.
+        var onidenAdmin = {}
+
+        // データ読み込み
+        onidenAdmin.data = !{JSON.stringify(data)};
+        console.log(onidenAdmin.data);
+
+    script(src="/javascripts/pages_compiled/pickups/main.js")
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block templates
+    include ../_includes/jsrender/pickups/_edit
+    include ../_includes/jsrender/pickups/_list
+    include ../_includes/jsrender/_modules/_recycleUploader
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block content
+
+    .pageHeader
+        h1 <i class="fa fa-usd" aria-hidden="true"></i> ピックアップ枠設定
+        p.description トップの左下にあるバナーの追加・削除が行えます。（※バージョン2.0で削除予定）
+        +message
+        +enviromentSelector
+
+        .menu
+            .button.actionOpenAddPane <i class="fa fa-plus" aria-hidden="true"></i> 広告を追加
+
+    .pageContent
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 ピックアップ広告一覧
+            .dataList.enabledPickups
+            .menu
+                .button.buttonPrimary.actionSavePosition.hidden 並び順を保存する
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 無効に設定されている広告一覧
+            .dataList.disabledPickups
+
+
+    .sideKicks
+
+        .sidePane.editPane

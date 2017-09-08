@@ -1,0 +1,76 @@
+extends ../_includes/_layout
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append variables
+    - var pageTitle = "ダッシュボード - 鬼マネージャー";
+    - var pageCode = "dashboard";
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append css
+    link(rel='stylesheet', href='/stylesheets/pages/dashboard.scss')
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append js
+    script.
+        var onidenAdmin = {}
+
+        // データ読み込み
+        onidenAdmin.data = !{JSON.stringify(data)};
+        console.log(onidenAdmin.data);
+
+    script(src="/javascripts/pages_compiled/general.js")
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block templates
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block content
+
+    .pageHeader
+        h1 <i class="fa fa-tachometer" aria-hidden="true"></i> ダッシュボード
+        p.description 最新の公開操作ログや変更ログが確認できます。
+
+
+    .pageContent
+
+        // ---------------------------------------------------------------------
+
+        section
+            h2 メモ
+            pre(style="height:200px;overflow-y:scroll;") #{data.keyValues.SETTINGS_NOTE.value}
+
+
+        // ---------------------------------------------------------------------
+
+        section
+            h2 公開作業履歴
+            ul.deployLogList
+                if data.deployLogs
+                    each log in data.deployLogs
+                        li
+                            .date #{log.time} に
+                            .user
+                                | <i class="fa fa-user-o" aria-hidden="true"></i>
+                                | #{log.user}
+                            .detail が#{log.detail}。
+
+        // ----------------------------------------------------------------------
+
+        section
+                h2 最新の変更履歴
+                ul.operationLogList
+                    if data.operationLogs
+                        each log in data.operationLogs
+                            li
+                                .date #{log.time} に
+                                .user
+                                    | <i class="fa fa-user-o" aria-hidden="true"></i>
+                                    | #{log.user}
+                                .detail が#{log.detail}。
+
+        // ----------------------------------------------------------------------

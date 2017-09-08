@@ -1,0 +1,185 @@
+{
+    "app": {
+        "paths": {
+            "_base": {
+                "source": "/public/source/",
+                "build": "/public/build/"
+            },
+            "situations": {
+                "source": {
+                    "_base": {
+                        "path": "/public/source/situations/%s/",
+                        "variables": ["situationCode"]
+                    },
+                    "storeThumbnail": {
+                        "path": "/public/source/situations/%s/images/store_thumbnail/",
+                        "variables": ["situationCode"]
+                    },
+                    "specialButton": "/public/source/situations/_common/images/special_button/",
+                    "callSpecialSound": "/public/source/situations/_common/sounds/call_special_sound/",
+                    "callBackground": {
+                        "path": "/public/source/situations/%s/images/call_background/",
+                        "variables": ["situationCode"]
+                    },
+                    "talkSound": {
+                        "path": "/public/source/situations/%s/sounds/talk_sound/",
+                        "variables": ["situationCode"]
+                    },
+                    "talkSoundBGM": "/public/source/situations/_common/sounds/talk_sound_bgm/",
+                    "talkVideo": {
+                        "path": "/public/source/situations/%s/videos/talk_video/",
+                        "variables": ["situationCode"]
+                    },
+                    "talkScene": {
+                        "path": "/public/source/situations/%s/images/talk_scene/",
+                        "variables": ["situationCode"]
+                    }
+                },
+                "build": {
+                  "storeThumbnail": {
+                      "path": "/%s/situationResources/%s/",
+                      "variables": ["apiVersion", "situationCode"]
+                  },
+                  "specialButton": {
+                      "path": "/%s/situationResources/%s/_%s/",
+                      "variables": ["apiVersion", "situationCode", "situationCode"]
+                  },
+                  "callSpecialSound": {
+                      "path": "/%s/situationResources/%s/_%s/",
+                      "variables": ["apiVersion", "situationCode", "situationCode"]
+                  },
+                  "callBackground": {
+                      "path": "/%s/situationResources/%s/_%s/",
+                      "variables": ["apiVersion", "situationCode", "situationCode"]
+                  },
+                  "talkSound": {
+                      "path": "/%s/situationResources/%s/%s_%s/",
+                      "variables": ["apiVersion", "situationCode", "languageCode", "situationCode"]
+                  },
+                  "talkSoundBGM": {
+                      "path": "/%s/situationResources/%s/_%s/",
+                      "variables": ["apiVersion", "situationCode", "situationCode"]
+                  },
+                  "talkVideo": {
+                      "path": "/%s/situationResources/%s/%s_%s/",
+                      "variables": ["apiVersion", "situationCode", "languageCode", "situationCode"]
+                  },
+                  "talkScene": {
+                      "path": "/%s/situationResources/%s/_%s/",
+                      "variables": ["apiVersion", "situationCode", "situationCode"]
+                  }
+                }
+            },
+            "menus": {
+                "source": {
+                    "menuButtonBackground": "/public/source/menus/images/menu_button_background/",
+                    "menuButtonIcon": "/public/source/menus/images/menu_button_icon/"
+                },
+                "build": {
+                    "menuButtonBackground": {
+                        "path": "/%s/situationList/zip/%s_%s_mainMenu/",
+                        "variables": ["apiVersion","languageCode","osCode"]
+                    },
+                    "menuButtonIcon": {
+                        "path": "/%s/situationList/zip/%s_%s_mainMenu/",
+                        "variables": ["apiVersion","languageCode","osCode"]
+                    }
+                }
+            },
+            "menuBackgrounds": {
+                "source": {
+                    "menuBackground": "/public/source/menus/images/menu_background/"
+                },
+                "build": {
+                    "menuBackground": {
+                        "path": "/%s/top_background/img/",
+                        "variables": ["apiVersion"]
+                    }
+                }
+            },
+            "pickups": {
+                "source": {
+                    "pickupBanner": "/public/source/pickups/images/pickup_banner/",
+                    "pickupNativeAdBackground": "/public/source/pickups/images/pickup_nativeAd_background/"
+                },
+                "build": {
+                    "pickupBanner": {
+                        "path": "/%s/top_pickup/img/",
+                        "variables": ["apiVersion"]
+                    },
+                    "pickupNativeAdBackground": {
+                        "path": "/%s/native_ad/img/",
+                        "variables": ["apiVersion"]
+                    },
+                    "pickupNativeAdIcon": {
+                        "path": "/%s/native_ad/img/",
+                        "variables": ["apiVersion"]
+                    }
+                }
+            },
+            "topics": {
+                "source": "/public/source/topics/",
+                "build": "/topics/",
+                "template": "/views/topics/_output.pug"
+            },
+            "plist": {
+                "build": {
+                    "mainMenu": {
+                        "path": "/%s/situationList/plist/",
+                        "variables": ["apiVersion"]
+                    },
+                    "situationInfo": {
+                        "path": "/%s/situationResources/%s/%s_%s/",
+                        "variables": ["apiVersion", "situationCode", "languageCode", "situationCode"]
+                    }
+                }
+            },
+            "deploy": {
+                "test": {
+                    "path": "/var/www/html/oni/build/test/",
+                    "folderName": "oniden",
+                    "addWorkingDirectory": false
+                },
+                "production": {
+                    "path": "/home/webadmin/contents/",
+                    "folderName": "oniden",
+                    "addWorkingDirectory": false
+                }
+            },
+            "backup": "/public/archive/"
+        },
+        "dataSet": {
+            "topicURL": {
+                "test": "http://dev-oni.active-app.jp/oni/build/test/oniden/topics/",
+                "production": "全般設定の内容をロード"
+            },
+            "nativeAdEffects": [
+                { "name": "なし", "value": "" },
+                { "name": "Aエフェクト", "value": "A" },
+                { "name": "Bエフェクト", "value": "B" },
+                { "name": "Cエフェクト", "value": "C" }
+            ]
+        }
+    },
+    "dbConfig": {
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "kouki1215",
+        "database": "oni_manager"
+    },
+    "sslConfig": {
+        "keyPath": "/ssl/server.key",
+        "certPath": "/ssl/server.crt"
+    },
+    "gitConfig": {
+        "path": {
+            "local": "/public/git/",
+            "remote": "ma-inc@ma-inc.git.backlog.jp:/ONIMANAGER/appData.git"
+        }
+    },
+    "oniManagerConfig": {
+        "allowCORS": true,
+        "accessCode": 1215,
+        "salt": "nine"
+    }
+}

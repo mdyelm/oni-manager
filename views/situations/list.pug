@@ -1,0 +1,83 @@
+extends ../_includes/_layout
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append variables
+    - var pageTitle = "シチュエーション管理 - 鬼マネージャー";
+    - var pageCode = "situations";
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append css
+    link(rel='stylesheet', href='/stylesheets/pages/situations.scss')
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append js
+    script.
+        var onidenAdmin = {}
+
+        // データ読み込み
+        onidenAdmin.data = !{JSON.stringify(data)};
+        console.log(onidenAdmin.data);
+
+    script(src="/javascripts/pages_compiled/situations/main.js")
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block templates
+    include ../_includes/jsrender/situations/_list
+    include ../_includes/jsrender/situations/_edit
+    include ../_includes/jsrender/situations/_edit_sceneSetEditor
+    include ../_includes/jsrender/_modules/_recycleUploader
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block content
+
+    .pageHeader
+        h1 <i class="fa fa-user-circle-o" aria-hidden="true"></i> シチュエーション管理
+        p.description シチュエーションの追加・削除が行えます。
+        +message
+        //+enviromentSelector
+
+        // ----------------------------------------------------------------------
+        .menu
+            .button.actionOpenAddPane
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                | シチュエーションを追加する
+        // ----------------------------------------------------------------------
+
+
+    .pageContent
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 シチュエーション一覧
+
+            .dataList.situations
+
+                //- TODO フィルタを作成する
+                //- .filter
+                //-     .title フィルタ
+                //-     .fiterItem
+                //-         .filterName 言語
+                //-         .filterInput
+                //-             select
+                //-                 option すべて
+
+                .info
+                    .resultCount
+                        span #{data.allSituations.length}
+                        | 件のシチュエーションを表示中
+
+                .list
+                    table
+
+        // ----------------------------------------------------------------------
+
+
+    .sideKicks
+
+        .sidePane.editPane.wide

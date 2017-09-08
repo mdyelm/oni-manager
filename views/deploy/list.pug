@@ -1,0 +1,240 @@
+extends ../_includes/_layout
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append variables
+    - var pageTitle = "データ更新管理 - 鬼マネージャー";
+    - var pageCode = "deploy";
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append css
+    link(rel='stylesheet', href='/javascripts/library/diff2html.min.css')
+    link(rel='stylesheet', href='/stylesheets/pages/deploy.scss')
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append js
+    script.
+        var onidenAdmin = {}
+
+        // データ読み込み
+        onidenAdmin.data = !{JSON.stringify(data)};
+        console.log(onidenAdmin.data);
+
+    script(src="/javascripts/pages_compiled/deploy/main.js")
+    script(src="/javascripts/library/diff2html-ui.min.js")
+    script(src="/javascripts/library/diff2html.min.js")
+
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block templates
+    //- include _edit
+    //- include _list
+    include ../_includes/jsrender/_modules/_recycleUploader
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block content
+
+    .pageHeader
+        h1 <i class="fa fa-upload" aria-hidden="true"></i> データ更新管理
+        p.description 変更した設定項目の反映を行います。公開作業を行うまで管理画面の変更内容は適用されません。
+        +message
+
+    .pageContent
+
+        .popupWarning(style="display:none")
+            form(method="post")
+                h1 本番データ更新
+                textarea(name="commitMessage" placeholder="公開内容の要約を入力してください")
+                p 公開用アクセスコード
+                .input
+                    input#accessCode(name="accessCode" type="password")
+                .menu
+                    .button.buttonDanger.actionDeployYes 更新
+                    .button.actionDeployNo キャンセル
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 お知らせ更新
+            p お知らせ管理で編集した内容がHTMLとして各アプリでの読み込み先に出力されます。
+
+            .flowList
+                ul
+                    li 1. お知らせを追加・変更
+                    li 2. テスト版お知らせ更新
+                    li 3. テスト版アプリで確認
+                    li 4. 本番のお知らせを更新
+                    li 5. 本番アプリで確認
+                    li 完了
+
+            .group
+                .groupTestDeploy
+                    h3 テスト版
+                    .path
+                        ul
+                            li <span>生成先：</span> #{data.paths.testTopicDeploy.build}
+                            li <span>出力先：</span> #{data.paths.testTopicDeploy.deploy}
+                    .menu
+                        .button.actionTestTopicDeploy
+                            <i class="fa fa-upload" aria-hidden="true"></i>
+                            | テスト版のお知らせを更新
+
+                .groupProductionDeploy
+                    h3 本番
+                    p 更新ボタンを押すと確認画面が表示されます。<br>本番のお知らせ更新にはアクセスコードが必要になります。
+                    .path
+                        ul
+                            li <span>生成先：</span> #{data.paths.productionTopicDeploy.build}
+                            li <span>出力先：</span> #{data.paths.productionTopicDeploy.deploy}
+                    .menu
+                        .button.buttonDanger.actionProductionTopicDeploy
+                            <i class="fa fa-upload" aria-hidden="true"></i>
+                            | 本番のお知らせを更新
+
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 アプリデータ更新
+            p
+                | シチュエーションやメニュー背景・ピックアップなど、お知らせ以外のデータ（アプリデータ）を更新します。<br>
+                | 管理画面で編集した内容はこちらでアプリデータの更新を行わない限り反映されません。<br>
+                strong 出力・アップロード中はサーバーからの応答が停止します。周りの作業が保存できなくなる場合がありますので事前に周りに声をかけてください。<br>
+
+            .flowList
+                ul
+                    li 1. アプリデータを<br>追加・変更
+                    li 2. テスト版データ更新
+                    li 3. テスト版アプリで確認
+                    li 4. 更新内容の取得
+                    li 5. 差分確認
+                    li (任意) zip作成
+                    li 6. 差分アップロード
+                    li 7. 本番アプリで確認<br>(デバッグ)
+                    li 完了
+
+
+            .group
+                .groupTestDeploy
+                    h3 テスト版
+                    .step
+                        h4 テスト版データ更新
+                        p テスト版アプリのアプリデータを更新します。更新後、テスト版アプリで管理画面での変更内容をプレビューできます。
+
+                        .path
+                            ul
+                                li <span>生成先：</span> #{data.paths.testDeploy.build}
+                                li <span>出力先：</span> #{data.paths.testDeploy.deploy}
+                        .menu
+                            .button.actionTestDeploy
+                                <i class="fa fa-upload" aria-hidden="true"></i>
+                                | テスト版のアプリデータ更新
+
+
+                .groupProductionDeploy
+                    h3 本番
+                    .step
+                        h4 STEP1. 更新内容の取得
+                        p 更新内容取得ボタンを押すと本番のアプリデータと現在管理画面に登録されている本番用アプリデータの差分を取得し、更新内容を確定します。
+                        p 最終取得日：#{data.lastCommitDate}
+                        p 取得回数：#{data.commitCount} 回
+                        .path
+                            ul
+                                li <span>生成先：</span> #{data.paths.productionExport.build}
+                                li <span>git管理場所：</span> #{data.paths.productionExport.git}
+
+                        .menu
+                            .button.actionProductionExport
+                                <i class="fa fa-archive" aria-hidden="true"></i>
+                                | 更新内容を取得
+
+                        .diff#diff
+                            | #{data.diff}
+
+                        p.connector <i class="fa fa-arrow-down" aria-hidden="true"></i>　この更新内容で...　<i class="fa fa-arrow-down" aria-hidden="true"></i>
+
+                    .step
+                        .stepInner
+                            .subStep
+                                h4 (任意) 全体ZIP作成
+                                p
+                                    | <strong>本番が壊れたときのために「全体ZIP(本番公開用アプリデータ全体を圧縮したもの)」を作成できます。</strong><br>
+                                    | 全体ZIPで本番を復元するためにはWINSCPなどによる手動でのアップロード操作が必要です。<br>
+                                    | 作成した全体ZIPは自動で削除されません。定期的に削除をお願いします。<br>
+                                    | 全体ZIPにお知らせは含まれません。
+
+                                .path
+                                    ul
+                                        li <span>保存元：</span> #{data.paths.productionFullZip.from}
+                                        li <span>保存先：</span> #{data.paths.productionFullZip.save}
+
+
+                                .menu.menuVertical
+                                    .button.actionProductionBackup
+                                        <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+                                        | 全体ZIPを作成
+
+                                .backupExplorer.recycleUploader
+                                    .field
+                                        .preview(style="display:none;")
+                                            img(src="")
+                                        .input
+                                            input.middle(
+                                                type="text"
+                                                name="backup"
+                                                value=""
+                                                placeholder="未選択"
+                                                style="display:none;"
+                                            )
+                                            .button(class="actionShowPopup") <i class="fa fa-folder-o" aria-hidden="true"></i> 全体ZIP一覧を表示
+                                    .popup.hidden
+                                        .button.buttonPopupClose(class="actionClosePopup") ×
+                                        .preview
+                                            img(src="")
+                                        .input
+                                            input(
+                                                type="text"
+                                                value=""
+                                            )
+                                        .upload
+
+
+                            .subStep
+                                h4 STEP2. 本番データ更新
+                                p
+                                    | 更新ボタンを押すと確認画面が表示されます。<br>
+                                    | 本番データの更新にはアクセスコードが必要になります。<br>
+                                    | サーバーリセットを行うと本番用s3サーバーからデータを削除しデータを再アップロードするため<strong>5分以上のダウンタイムが発生します。</strong><br>
+                                    | サーバーリセットではgitへのコミットは行われません。
+                                .path
+                                    ul
+                                        li <span>出力元：</span> #{data.paths.productionDeploy.from}
+                                        li <span>出力先：</span> #{data.paths.productionDeploy.deploy}
+
+                                .menu.menuVertical
+                                    .button.buttonDanger.actionProductionDeploy
+                                        <i class="fa fa-upload" aria-hidden="true"></i>
+                                        | 本番アプリデータ更新
+
+                                    .button.buttonDanger.actionProductionFullDeploy
+                                        <i class="fa fa-upload" aria-hidden="true"></i>
+                                        | 本番のアプリデータをリセット <br>(すべてを削除して管理画面から再出力します)
+
+        // ----------------------------------------------------------------------
+
+        section
+            h2 本番公開後の確認事項
+            p 本番公開お疲れさまでした。お疲れかもしれませんが、作業漏れ防止のために以下のチェックをお願いします。
+
+            ul
+                li 有料シチュエーションの場合は別途、外部データベースへのシチュエーションのコードネーム・ポイント情報の登録が必要です。
+
+
+        // ----------------------------------------------------------------------
+
+    .sideKicks
+        .sidePane.editPane.wide

@@ -1,0 +1,370 @@
+doctype html
+html(lang="ja")
+    head
+        meta(http-equiv="Content-Type" content="text/html;charset=UTF-8")
+        meta(name="viewport" content="width=320,user-scalable=no")
+        meta(name="format-detection" content="telephone=no")
+        meta(name="ROBOTS" content="NOINDEX,NOFOLLOW,NOARCHIVE")
+        meta(http-equiv="Pragma" content="no-cache")
+        meta(http-equiv="Cache-Control" content="no-cache")
+        meta(http-equiv="expires" content="0")
+        title=title
+        style.
+            /*reset*/
+
+            html, body, div, span, applet, object, iframe,
+            h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+            a, abbr, acronym, address, big, cite, code,
+            del, dfn, em, img, ins, kbd, q, s, samp,
+            small, strike, strong, sub, sup, tt, var,
+            b, u, i, center,
+            dl, dt, dd, ol, ul, li,
+            fieldset, form, label, legend,
+            table, caption, tbody, tfoot, thead, tr, th, td,
+            article, aside, canvas, details, embed,
+            figure, figcaption, footer, header, hgroup,
+            menu, nav, output, ruby, section, summary,
+            time, mark, audio, video {
+              margin: 0;
+              padding: 0;
+              border: 0;
+              outline: 0;
+              /*font-size: 62.5%;*/
+            }
+
+            body {
+              line-height: 1;
+              font: 1em/1.5em sans-serif;
+              color: #39021D;
+            }
+
+            ol, ul {
+              list-style: none;
+            }
+
+            blockquote, q {
+              quotes: none;
+            }
+
+            blockquote:before, blockquote:after,
+            q:before, q:after {
+              content: '';
+              content: none;
+            }
+
+            table {
+              border-collapse: collapse;
+              border-spacing: 0;
+            }
+
+            textarea:focus, input:focus{
+                outline: none;
+            }
+
+            h1,h2,h3,h4,h5,h6 {
+            	font-size: 100%;
+            }
+
+            p {
+            	margin: 0;
+            }
+
+            ol,ul,dl {
+            	text-indent: 0;
+            }
+
+            li {
+            	list-style: none;
+            }
+
+            fieldset,img {
+            	border: 0;
+            }
+
+            img{
+            	width:100%;
+            	vertical-align:bottom;
+            	padding:0;
+            	margin:0;
+            	border:0;
+            }
+
+            table {
+            	border-collapse: collapse;
+            	border-spacing: 0;
+            }
+
+            caption,th {
+            	text-align: left;
+            }
+
+            address,caption,cite,code,dfn,em,strong,th,var {
+            	font-style: normal;
+            	font-weight: normal;
+            }
+
+            abbr,acronym {
+            	border: 0;
+            }
+            /*-------------------------------------------
+            		Links
+            ------------------------------------------ */
+            a:link {
+            	text-decoration:none;
+            	color:#2193D5;
+            }
+
+            a:visited {
+            	text-decoration:none;
+            	color:#022d68;
+            }
+
+            a:hover {
+            	text-decoration:none;
+            	color:#022d68;
+            }
+
+            a:active {
+            	text-decoration:none;
+            	color:#022d68;
+            }
+
+            /* -----------------------------------
+            		Other
+             ----------------------------------- */
+            .category-box,
+            .category-box_big,
+            .category-box-middle,
+            .category-box-min{
+            	clear: both;
+            	width: 818px;
+            	margin:0 auto;
+            }
+            .category-box{margin-bottom:0;}
+            .category-box-big{padding-bottom:50px;}
+            .category-box-middle{padding-bottom:40px;}
+            .category-box-min{padding-bottom:30px;}
+            .category-box.last{margin-bottom:30px;}
+            /*-------------------------------------------
+            		Clearfix
+            ------------------------------------------ */
+            .clearfix:after { /* clearfix */
+            	clear: both;
+            	content: ".";
+            	display: block;
+            	height: 0;
+            	visibility: hidden;
+            }
+            .clearfix {
+            	display: inline-table;
+            	min-height: 1%; /* for IE 7*/
+            }
+
+            #wrapper:after{
+            	clear: both;
+            	content: ".";
+            	display: block;
+            	height: 0;
+            	visibility: hidden;
+            }
+            /* Hides from IE-mac \*/
+            * html .clearfix {
+            	height: 1%;
+            }
+            .clearfix {
+            	display: block;
+            }
+
+
+            /*base*/
+
+            .ios,.android{
+            	display:none;
+            }
+
+            #wrapper{
+            	width:100%;
+            	max-width:640px;
+            	margin:0 auto;
+            	height:auto;
+            }
+
+            #content{
+            	width:100%;
+            	padding:0 12px;
+            	box-sizing:border-box;
+            }
+
+            #content section{
+            	width:100%;
+            	height:auto;
+            	margin-bottom:20px;
+            }
+
+            #content h2{
+            	font-size:13px;
+            	font-family:"ヒラギノ角ゴ Pro TT", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+            	line-height:1;
+            	padding-bottom:6px;
+            	border-bottom:1px #bab9ba solid;
+            	font-weight:bold;
+            	color:#4e4e4e;
+            	margin-bottom:5px;
+            }
+
+            #content p{
+            	font-size:13px;
+            	line-height:19px;
+            	color:#4e4e4e;
+            	font-family:"ヒラギノ角ゴ Pro TT", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+            }
+
+            /*************************
+            news
+            ************************/
+
+            .news_h1{display:none;}
+
+            .news{
+            	background:#e0e8af;
+            }
+
+            #content .news_box{
+            	color:#000;
+            	letter-spacing:-0.1px;
+            	padding:2% 0 4%;
+            	margin: 0 6% 4%;
+            	border-bottom:2px solid #c2ca9a;
+            }
+
+            #content .news_box p{
+            	color:#000;
+            	font-size:14px;
+            	margin-bottom:3%;
+            	line-height:1.6em;
+            }
+
+            #content .news_box h2{
+            	color:#21622c;
+            	font-size:16px;
+            	line-height:1.3em;
+            	font-weight:bold;
+            	font-family:"ヒラギノ角ゴ Pro TT", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+            	border:none;
+            	padding: 8px 0;
+            	margin: 0;
+            }
+
+            #content .news_box a{
+            	color:#21622c;
+            	text-decoration:underline;
+            }
+
+            .news_day,.news_time{
+            	font-size:13px;
+            	font-family:"ヒラギノ角ゴ Pro TT", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+            	font-weight:bold;
+            }
+
+            .news_time{margin-left:1%;}
+
+
+            /*ad_style*/
+
+            html {
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            body {
+                -webkit-text-size-adjust: 100%;
+            }
+
+            .dfp_ad_wrapper {
+                overflow-x: hidden;
+                overflow-y: auto;
+                width: 100%;
+                text-align: center;
+            }
+
+            .dfp_ads {
+                overflow-x: hidden;
+                overflow-y: auto;
+            		margin: 0 auto;
+            }
+
+
+            /*gunosy*/
+
+            .gunosyads-sdk-container {
+                width: 300px;
+                height: 250px;
+                margin: 0 auto;
+            }
+
+            .gunosyads-sdk-container a {
+                text-align: left;
+                text-decoration: none;
+                color: #444;
+                font-family: 'ヒラギノ角ゴ Pro W3', Helvetica, Verdana, sans-serif;
+            }
+
+            .gunosy-wrap {
+                width: 300px;
+                height: 250px;
+                background-color: #fff;
+                border-radius: 3px;
+                box-shadow: 0 1px 1px 0 rgba(197, 186, 174, 0.7);
+                overflow: hidden;
+            }
+
+            .gunosy-img {
+                margin: 10px;
+            }
+
+            .gunosy-img img {
+                width: 100%;
+            }
+
+            .gunosy-title {
+                float: left;
+                padding: 0 10px;
+                font-size: 13px;
+                line-height: 17px;
+                overflow: hidden;
+                box-sizing: border-box;
+            }
+
+            .gunosy-pr {
+                padding: 8px 10px 0;
+                clear: both;
+                color: #A0A0A0;
+                font-size: 10px;
+                overflow: hidden;
+            }
+
+            .gunosy-left {
+                float: left;
+            }
+
+            .gunosy-right {
+                float: right;
+            }
+
+        //- link(rel="stylesheet" href="common/css/reset.css")
+        //- link(rel="stylesheet" type="text/css" href="common/css/base.css")
+        //- link(rel="stylesheet" type="text/css" href="common/css/ad_style.css")
+        //- script(type="text/javascript" src="common/js/jquery-3.1.1.min.js")
+    body.news
+        div#wrapper
+            div#content
+                each topic in result
+                    div.news_box
+                        span.news_day=topic.date
+                        span.news_time
+                        h2=topic.title
+                        p
+                            | !{topic.parsedForBuildComment}
+
+            div#ad
+                | !{footerHtml}

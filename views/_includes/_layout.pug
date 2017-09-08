@@ -1,0 +1,26 @@
+doctype html
+html
+    include _mixins
+    block variables
+    head
+        meta(charset="utf-8")
+        title= pageTitle
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        block css
+            link(rel='stylesheet', href='/stylesheets/hint.min.css')
+            link(rel='stylesheet' href='/stylesheets/font-awesome.min.css')
+            link(rel='stylesheet', href='/stylesheets/style.css')
+            link(rel='stylesheet', href='/stylesheets/common.scss')
+        block js
+            script(src="/javascripts/library/jquery-2.0.2.min.js")
+            script(src="/javascripts/library/js.cookie.js")
+            script(src="/javascripts/library/jsrender.min.js")
+
+        block templates
+
+    body
+        .container
+            include _sidebar
+            .content
+                block content
+            .overlay

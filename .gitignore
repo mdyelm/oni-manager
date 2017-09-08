@@ -1,0 +1,8 @@
+node_modules
+public/source
+public/build
+public/deploy
+public/git
+public/archive
+doc
+/nbproject/private/

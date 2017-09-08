@@ -1,0 +1,28 @@
+script(type="text/html" id="list")
+    .info
+        .resultCount
+            span {{:listData.length}}
+            | 件のお知らせを表示中
+
+    ul.verticalList.topicList
+        | {{for listData}}
+        li.listItem.topicItem(
+            class="{{if isEnabled == 0}}disabled{{/if}}"
+            data-id="{{:id}}"
+            data-languageId="{{:languageId}}"
+            data-osId="{{:osId}}"
+        )
+            .listItemInner
+                | {{if !osId }}
+                .type 共通
+                | {{else}}
+                .type {{:osName}}
+                | {{/if}}
+                .date {{getLabeledDate:date}}
+                .title {{:title}}
+                .comment {{:parsedComment}}
+            .menu
+                .button.actionDelete(data-id="{{:id}}")
+                    | <i class="fa fa-trash-o" aria-hidden="true"></i> 削除
+                .button.actionEdit <i class="fa fa-pencil" aria-hidden="true"></i> 編集
+        | {{/for}}

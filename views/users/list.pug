@@ -1,0 +1,96 @@
+extends ../_includes/_layout
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append variables
+    - var pageTitle = "ユーザー管理 - 鬼マネージャー";
+    - var pageCode = "users";
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append css
+    link(rel='stylesheet', href='/stylesheets/pages/users.scss')
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block append js
+    script.
+        var onidenAdmin = {}
+
+        // データ読み込み
+        onidenAdmin.data = !{JSON.stringify(data)};
+        console.log(onidenAdmin.data);
+
+    script(src="/javascripts/pages_compiled/users/main.js")
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block templates
+
+//- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+block content
+
+    .pageHeader
+        h1 <i class="fa fa-tachometer" aria-hidden="true"></i> ユーザー管理
+        p.description 管理画面にアクセスできるユーザーの追加や削除が行えます。<br>ユーザー管理は権限が管理者に設定されているユーザーのみアクセスできます。
+
+
+    .pageContent
+
+        // ---------------------------------------------------------------------
+
+        section
+            h2 ユーザー一覧
+
+            .table.userTableEditor
+
+                .tableHeader
+                    .cell ID
+                    .cell ユーザー名
+                    .cell パスワード
+                    .cell 表示名
+                    .cell 権限
+                    .cell 操作
+
+                if data.users
+                    each user in data.users
+                        form(method="post" action="/users/"+user.id)
+                            .tableContent
+                                .cell #{user.id}
+                                .cell
+                                    .input
+                                        input(type="text" name="username" value=user.username placeholder="ユーザー名")
+                                .cell
+                                    .input
+                                        //input(type="password" name="password" value=user.password placeholder="パスワード")
+                                .cell
+                                    .input
+                                        input(type="text" name="name" value=user.name placeholder="表示名")
+                                .cell
+                                    select(name="role" value=user.role)
+                                        option(value="admin" selected= user.role == "admin" ) 管理者
+                                        option(value="editor" selected= user.role == "editor") 編集者
+                                .cell
+                                    input(type="hidden" name="_method" value="PUT")
+                                    .menu
+                                        .button.actionEdit 変更
+                                        .button.actionRemove 削除
+
+
+                form(method="post" action="/users/")
+                    .tableContent.add
+                        .cell (自動)
+                        .cell: input(type="text" name="username" placeholder="ユーザー名")
+                        .cell: input(type="password" name="password" placeholder="パスワード")
+                        .cell: input(type="text" name="name" placeholder="表示名")
+                        .cell
+                            select(name="role")
+                                option(value="admin") 管理者
+                                option(value="editor") 編集者
+                        .cell
+                            .menu
+                                .button.actionAdd 追加
+
+
+        // ----------------------------------------------------------------------

@@ -1,0 +1,99 @@
+@import "../_includes/_modules/_enviromentSelector";
+@import "../_includes/_modules/_recycleUploader";
+
+
+.dataList {
+
+    .groupSelector {
+        margin: 10px -10px;
+        border-bottom: 1px solid #ddd;
+
+        .group {
+            position: relative;
+            display: flex;
+            padding: 0 10px;
+        }
+
+        .groupTitle {
+            position: absolute;
+            left: 0;
+            padding: 20px;
+            width: 150px;
+            color: rgba(0,0,0,0.5);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .groupItem {
+            flex: 0.125;
+            margin: 10px 10px 0;
+            padding: 10px;
+            color: #999;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+
+            &.selected {
+                background: #ddd;
+                color: #333;
+            }
+
+        }
+
+    }
+
+    .list {
+
+        tr.item td img {
+
+
+            &.smallBanner {
+                width: auto;
+                height: 30px;
+            }
+
+
+            &.largeBanner {
+                width: auto;
+            }
+
+        }
+
+
+    }
+
+}
+
+.editPane {
+
+    .backgroundUploader {
+
+        .field .preview img {
+            width: calc(378px / 1.5);
+            height: calc(87px / 1.5);
+        }
+
+        .popup .preview img {
+            width: calc(378px / 1.5);
+            height: calc(87px / 1.5);
+        }
+
+    }
+
+    .iconUploader {
+
+        .field .preview img {
+            width: calc(76px);
+            height: calc(72px);
+            background: #888;
+        }
+
+        .popup .preview img {
+            width: calc(76px);
+            height: calc(72px);
+            background: #888;
+        }
+
+    }
+
+}

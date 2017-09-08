@@ -1,0 +1,319 @@
+@import "_includes/_define";
+
+* {
+    transition-property: background;
+    transition-duration: 0.25s;
+}
+
+body {
+    font-family:"游ゴシック", YuGothic, "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", sans-serif;
+}
+
+img {
+    max-width: 100%;
+}
+
+hr {
+    margin: 20px 0;
+    opacity: 0.4;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.center {
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    &.menuVertical {
+        flex-direction:column;
+
+        .button {
+            margin-bottom: 20px;
+        }
+
+        .button + .button {
+            margin-left: 0;
+        }
+    }
+
+    .button {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+.row {
+
+    %col {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .col-4 {
+        @extend %col;
+        width: calc(100% / 12 * 4);
+    }
+
+    .col-6 {
+        @extend %col;
+        width: 50%;
+    }
+
+    .col-8 {
+        @extend %col;
+        width: calc(100% / 12 * 8);
+    }
+
+    .col-10 {
+        @extend %col;
+        width: calc(100% / 12 * 10);
+    }
+
+    .col-12 {
+        @extend %col;
+        width: 100%;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.container > .sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    width: calc(220px - 40px);
+    height: calc(100% - 40px);
+    background: $color_pane;
+    overflow-y: auto;
+
+    h1 {
+        position: relative;
+        margin: 20px 0 30px 0;
+        color: #fff;
+        font-size: 20px;
+        text-align: center;
+        z-index: 1;
+
+        strong {
+            color: #999;
+        }
+
+    }
+
+    .btnDeploy {
+        position: relative;
+        margin: 0 0 40px 0;
+        padding: 0 0 20px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        z-index: 1;
+
+        a {
+            @include menu($color_pane);
+            color: #4b6579;
+            background: #fff;
+            text-decoration: none;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        a:hover {
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+    }
+
+    .category {
+        position: relative;
+        margin: 0 0 20px 0;
+        z-index: 1;
+
+        h2 {
+            font-size: 14px;
+            color: #fff;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            list-style: none;
+        }
+
+        ul li {
+            margin: 0 0 10px 0;
+
+            &:last-child {
+                margin: 0;
+            }
+
+            &.current {
+
+                a {
+                    background: #fff;
+                    color: $color_pane;
+                }
+
+            }
+
+            a {
+                @include menu($color_pane);
+                color: #fff;
+                text-decoration: none;
+            }
+
+        }
+
+
+
+    }
+
+    .userInfo {
+        @include box("mini");
+        background: darken($color_pane, 10%);
+        color: #fff;
+        text-align: center;
+
+        p {
+            margin: 0;
+        }
+
+    }
+
+    .bg {
+        display: none;
+        position: absolute;
+        left: 20%;
+        top: 100px;
+        margin: 0;
+        width: 100%;
+        overflow: hidden;
+        z-index: 0;
+
+        img {
+            max-width: 100%;
+            opacity: 0.1;
+        }
+
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.container >.content {
+    position: absolute;
+    top: 0;
+    left: 220px;
+    padding: 20px;
+    width: calc(100% - 260px );
+    height: calc(100% - 40px);
+    background: $color_background;
+    color: #333;
+    font-family: mspgothic;
+    overflow: hidden;
+    overflow-y: auto;
+
+    .pageHeader {
+        margin: 0 0 40px 0;
+
+        .description {
+        }
+
+        .message {
+            margin: 0 0 20px 0;
+            padding: 20px;
+            background: #365f69;
+            color: #fff;
+            border-radius: 5px;
+
+            &.error {
+                background: #9C2F2F;
+            }
+
+            .messageDetail {
+                margin: 10px 0 0 0;
+                padding: 10px;
+                background: rgba(0,0,0,0.1);
+                font-size: 10px;
+
+                h1,h2,h3 {
+                    margin: 0;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                }
+
+            }
+
+
+        }
+
+        & > .menu {
+
+            justify-content:flex-start;
+
+            .button {
+                flex: 0.2;
+            }
+
+        }
+
+    }
+
+    .pageContent {
+
+        section {
+            margin: 0 0 40px 0;
+            padding: 10px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        section > h2 {
+            margin: 0;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ccc;
+            background: #CBD0D1;
+            color: $color_header_text;
+            border-radius: 3px;
+        }
+
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.container > .overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #888;
+    opacity: 0.75;
+    z-index: 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@import "_includes/_panes";
+@import "_includes/_buttons";
+@import "_includes/_lists";
+@import "_includes/_form";

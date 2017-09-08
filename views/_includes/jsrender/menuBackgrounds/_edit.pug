@@ -1,0 +1,112 @@
+script(type="text/html" id="edit")
+    .paneInner
+
+        .paneHeader
+            .paneTitle メニュー背景の{{:actionName}}
+
+            .buttonClose.actionCloseCurrentSidePane
+                | <i class="fa fa-times" aria-hidden="true"></i>
+
+        .paneContent
+            .menuBackgrounds
+                form(id="editForm" action="{{:formActionURL}}" method="post")
+                    input(type="submit" class="hidden")
+                    input(type="hidden" name="_method" value="{{:formMethod}}")
+                    input(type="hidden" name="language_id" value="{{if item.languageId}}{{:item.languageId}}{{/if}}")
+                    input(type="hidden" name="os_id" value="{{if item.osId}}{{:item.osId}}{{/if}}")
+
+                    //- ===================================================
+
+                    .formGroup
+                        p(class="mesError" style="display:none" data-id="{{:dpErr}}") 他の画面及び人に更新されているため、保存できません
+                        .formGroupTitle 基本設定
+                        .row
+                            .col-12
+                                .formItem
+                                    input(
+                                        type="hidden"
+                                        name="updateErr"
+                                        value="{{:item.timestamps.updateErr}}"
+                                    )
+                                    .label ステータス
+                                    .input
+                                        label(class="{{if item.isEnabled == 1 || item.isEnabled == null}}selected{{/if}}")
+                                            | <input type="radio" name="is_enabled" value="1" {{if item.isEnabled == 1 || item.isEnabled == null}}checked="checked"{{/if}}>
+                                            | 有効
+                                        label(class="{{if item.isEnabled == 0}}selected{{/if}}")
+                                            | <input type="radio" name="is_enabled" value="0" {{if item.isEnabled == 0}}checked="checked"{{/if}}>
+                                            | 無効
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 掲載期間
+                                    .input
+                                        .row
+                                            .col-6
+                                                | 開始
+                                                input.middle(type="date" name="startDate_date" value="{{getDate:item.startDate}}" required)
+                                                input.short(type="time" name="startDate_time" value="{{if item.startDate}}{{getTime:item.startDate}}{{else}}00:00{{/if}}" required)
+
+                                            .col-6
+                                                | 終了
+                                                input.middle(type="date" name="endDate_date" value="{{getDate:item.endDate}}" required)
+                                                input.short(type="time" name="endDate_time" value="{{if item.endDate}}{{getTime:item.endDate}}{{else}}23:59{{/if}}" required)
+
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 背景名<br>※出力なし
+                                    .input
+                                        input(type="text" name="name" value="{{:item.name}}")
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 備考<br>※ 出力なし
+                                    .input
+                                        textarea(name="note" rows=8)
+                                            | {{:item.note}}
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label バージョン
+                                    .input
+                                        input(type="text" name="version" value="{{if item.version}}{{:item.version}}{{else}}v1.0{{/if}}" pattern="v[0-9.]*" required)
+                                        p.description 期間や画像の変更時にバージョンを上げてください
+
+
+                    //- ===================================================
+
+                    .formGroup
+                        .formGroupTitle 画像設定
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 背景画像<br>640px x 820px
+                                    .input
+                                        .backgroundUploader.recycleUploader
+                                            .field
+                                                .preview
+                                                    img(src="{{:item.imagePath}}")
+                                                .input
+                                                    input(type="text" name="image_path" value="{{:item.imagePath}}" placeholder="未選択")
+                                                    .button(class="actionShowPopup") 選択
+
+                                            .popup.hidden
+                                                .button.buttonPopupClose(class="actionClosePopup") ×
+                                                .preview
+                                                    img(src="{{:item.imagePath}}")
+                                                .input
+                                                    input(type="text" value="{{:item.imagePath}}")
+                                                .upload
+
+
+        .paneFooter
+            .menu
+                .button.buttonSave.actionSave {{:saveActionName}}する
+                |{{if id}}
+                .button.actionDelete(data-id="{{:id}}") 削除する
+                | {{/if}}

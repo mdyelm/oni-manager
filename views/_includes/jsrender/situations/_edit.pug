@@ -1,0 +1,811 @@
+-
+
+    var situation = "~root.item.details";
+    var env = "[~languageCode][code]";
+    var situationVariable =  situation + env;
+
+    var situationFormShortCode = function(key){
+        return "situationDetails[{{:~getMixLoopIndex(~loopId,id)}}][" + key + "]";
+    }
+
+script(type="text/html" id="edit")
+    .paneInner
+
+        .paneHeader
+            .paneTitle シチュエーションの{{:actionName}}
+
+            .buttonClose.actionCloseCurrentSidePane
+                | <i class="fa fa-times" aria-hidden="true"></i>
+
+            //- .menu
+            //-     .button
+            //-         a(href="/situations/test") test
+
+        .paneContent
+            .situationEditForm
+                form(id="editForm" action="{{:formActionURL}}" method="post")
+                    input(type="submit" class="hidden")
+                    input(type="hidden" name="_method" value="{{:formMethod}}")
+
+                    // -------------------------------------------------------------------------------------------------------
+
+                    section.global
+                        p(class="mesError" style="display:none" data-id="{{:dpErr}}") 他の画面及び人に更新されているため、保存できません
+                        p.description ※メニュー背景やアイコンの設定はメニュー管理で行います。
+                        
+                            .row
+                                .col-12
+                                    .formItem
+                                        .label
+                                            | 課金
+                                        .input
+                                            label(class="{{if ~root.item.isPayment == 1}}selected{{/if}}").
+                                                <input
+                                                    type="radio"
+                                                    name="is_payment"
+                                                    value="1"
+                                                    {{if ~root.item.isPayment == 1 }}checked="checked"{{/if}}
+                                                    data-sync-fieldname="isPayment_true"
+                                                    class="actionToggleCodeSync actionShowStoreRelated"
+                                                >
+                                                有料
+                                            label(class="{{if ~root.item.isPayment == 0 || ~root.item.isPayment == null}}selected{{/if}}").
+                                                <input
+                                                    type="radio"
+                                                    name="is_payment"
+                                                    value="0"
+                                                    {{if ~root.item.isPayment == 0 || ~root.item.isPayment == null }}checked="checked"{{/if}}
+                                                    data-sync-fieldname="isPayment_false"
+                                                    class="actionToggleCodeSync actionHideStoreRelated"
+                                                >
+                                                無料
+
+                            .row
+                                //- .col-6
+                                //-     .formItem
+                                //-         .label
+                                //-             | シチュエーション名<br>
+                                //-         .input
+                                //-             input(type="text" name="name" value="{{:~root.item.name}}" placeholder="例：いうこと聞かない時")
+                                //-             p.description シチュエーション識別用です
+
+                                .col-12
+                                    .formItem
+                                        .label コードネーム
+                                        .input
+                                            input.middle(
+                                                type="text"
+                                                name="code"
+                                                value="{{:item.code}}"
+                                                placeholder="例：oni_iukoto"
+                                                class="actionUpdateCode"
+                                                pattern="[0-9a-z_-]*"
+                                                required
+                                            )
+                                            input.middle(
+                                                type="hidden"
+                                                name="updateErr"
+                                                value="{{:item.timestamps.updateErr}}"
+                                            )
+                                            .message
+                                            p.description
+                                                | <strong>※画像などをアップロードする前に必ずここを設定してください</strong><br>
+                                                | ※フォルダ名などに使用されます<br>
+                                                | ※同キャラで複数シチュエーションを作れるようにキャラ名＋_(アンダーバー)＋シチュエーション名にしてください。（例oni_iukoto、oni_gohanなど）<br>
+                                                | ※有料シチュエーションの場合は自動的に出力時にコードネーム＋言語名(例：nantoka_ko)で出力されます。(日本語のみ言語名がつかない)<br>
+
+                            .row
+                                .col-12
+                                    .formItem
+                                        .label 共通素材バージョン(元ベースバージョン)
+                                        .input
+                                            input.short(
+                                                name="version"
+                                                type="text"
+                                                value="{{if item.version}}{{:item.version}}{{else}}1.0{{/if}}"
+                                                placeholder="例：1.0"
+                                                pattern="[0-9.]*"
+                                                required
+                                            )
+                                            p.description.
+                                                目的：シチュエーションのデータに更新があった場合にダウンロードさせるため<br>
+                                                条件：キャッシュしているbase_versionより起動時に取得したplistのbase_versionが新しい場合に対象をダウンロード<br>
+                                                ダウンロード対象：シチュエーション自体の共通zip(_situationCode.zip)
+
+                            .row
+                                .col-12
+                                    .formItem
+                                        .label 備考<br>(出力なし)
+                                        .input
+                                            textarea(name="note" rows=8 placeholder="例：メモに") {{:item.note}}
+
+
+                    // -------------------------------------------------------------------------------------------------------
+
+                    .formEnviromentSelector
+                        .language
+                            | {{for languages}}
+                            .languageItem(class="{{if #getIndex() == 0}}selected{{/if}}" data-id="{{:id}}")
+                                | <i class="fa fa-globe" aria-hidden="true"></i>
+                                | {{:name}}
+                            | {{/for}}
+                        .os
+                            | {{for os}}
+                            .osItem(class="{{if #getIndex() == 0}}selected{{/if}}" data-id="{{:id}}")
+                                | {{if code == "ios"}}<i class="fa fa-apple" aria-hidden="true"></i>{{/if}}
+                                | {{if code == "android"}}<i class="fa fa-android" aria-hidden="true"></i>{{/if}}
+                                | {{:name}}
+                            | {{/for}}
+
+
+                    // -------------------------------------------------------------------------------------------------------
+
+                    | {{for languages}}
+                    | {{for ~root.os ~languageId=id ~languageCode=code ~loopId=#index}}
+
+                    .situation(data-env-id="{{:~getMixLoopIndex(~loopId,id) - 1}}" data-languageId="{{:~languageId}}" data-osId="{{:id}}" class="isHidden")
+                        input(type="hidden" name=situationFormShortCode("language_id") value="{{:~languageId}}")
+                        input(type="hidden" name=situationFormShortCode("os_id") value="{{:id}}")
+                        input(type="hidden" name=situationFormShortCode("id") value="{{:~root.item.details[~languageCode][code].id}}")
+
+                        p.description ※ここより下は説明がなければOSごとの設定は不要です。
+
+                        // ----------------------------------------------------------------------------------------------------
+
+                        section.pickedSituation
+
+                            // -------------------------------------------------------------------------------------------------
+
+                            .formGroup.basicGroup
+                                .formGroupTitle 基本設定
+                                .row
+                                    .col-6
+                                        .formItem
+                                            .label
+                                                | ステータス<br>
+                                                span.label.labelEnvProper (言語/OSごと)
+
+                                            .input
+                                                label(class="{{if ~root.item.details[~languageCode][code].isEnabled == 1}}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name=#{situationFormShortCode('is_enabled')}
+                                                        value="1"
+                                                        {{if ~root.item.details[~languageCode][code].isEnabled == 1}} checked="checked" {{/if}}
+                                                    >
+                                                    有効
+                                                label(class="{{if ~root.item.details[~languageCode][code].isEnabled == 0 || ~root.item.details[~languageCode][code].isEnabled == null }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name=#{situationFormShortCode('is_enabled')}
+                                                        value="0"
+                                                        {{if ~root.item.details[~languageCode][code].isEnabled == 0 || ~root.item.details[~languageCode][code].isEnabled == null }} checked="checked" {{/if}}
+                                                    >
+                                                    無効
+                                                label(class="{{if ~root.item.details[~languageCode][code].isEnabled == 2}}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name=#{situationFormShortCode('is_enabled')}
+                                                        value="2"
+                                                        {{if ~root.item.details[~languageCode][code].isEnabled == 2}} checked="checked" {{/if}}
+                                                    >
+                                                    テスト公開
+                                    .col-6
+                                        .formItem
+                                            .label
+                                                | 言語素材バージョン
+
+                                            .input
+                                                input.short(
+                                                    name=situationFormShortCode("version")
+                                                    type="text"
+                                                    value="{{if ~root.item.details[~languageCode][code].version}}{{:~root.item.details[~languageCode][code].version}}{{else}}1.0{{/if}}"
+                                                    placeholder="例：1.0"
+                                                    pattern="[0-9.]*"
+                                                    data-sync-fieldname="langVersion"
+                                                    data-language-code="{{:~languageCode}}"
+                                                    class="sync-os"
+                                                )
+                                                p.description.
+                                                    目的：対象言語のアニメーション内容または音声に変更があった場合にダウンロードさせるため<br>
+                                                    条件：過去にダウンロードしたシチュエーションのsituationInfoにあるlangVersionより起動時に取得したplistの[lang]_versionが新しい場合に対象をダウンロード<br>
+                                                    ダウンロード対象：シチュエーション自体の言語zip(jp_situationCode.zip)
+
+                                hr
+                                .row
+                                    .col-6
+                                        .formItem
+                                            .label
+                                                | シチュエーション名
+                                            .input
+                                                input(
+                                                    type="text"
+                                                    name=situationFormShortCode('situation_name')
+                                                    value="{{:~root.item.details[~languageCode][code].situationName}}"
+                                                    placeholder="例：言うことを聞かない時"
+                                                    data-sync-fieldname="name"
+                                                    data-language-code="{{:~languageCode}}"
+                                                    class="sync-os"
+                                                )
+                                                p.description シチュエーション識別用です
+
+                                    .col-6
+                                        .formItem
+                                            .label
+                                                | キャラクター名
+                                            .input
+                                                input(
+                                                    type="text"
+                                                    name=situationFormShortCode('character_name')
+                                                    value="{{:~root.item.details[~languageCode][code].characterName}}"
+                                                    placeholder="例：あかおに"
+                                                    data-sync-fieldname="characterName"
+                                                    data-language-code="{{:~languageCode}}"
+                                                    class="sync-os"
+                                                )
+
+                                hr
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label
+                                                | コンテンツ表示期間
+                                            .input
+                                                input.middle(
+                                                    type="date"
+                                                    name=situationFormShortCode("showTermStart_date")
+                                                    value="{{getDate:~root.item.details[~languageCode][code].showTermStart}}"
+                                                )
+                                                | ～
+                                                input.middle(
+                                                    type="date"
+                                                    name=situationFormShortCode("showTermEnd_date")
+                                                    value="{{getDate:~root.item.details[~languageCode][code].showTermEnd}}"
+                                                )
+                                                p.description(style="color:red;font-weight: bold;")
+                                                    | 有料シチュエーションの場合はポイント交換画面の有効期限がplistではないところを参照しているため、<br>
+                                                    | MSG_PUSHデータベース(Amazon)のシチュエーションテーブルも併せて変更が必要
+
+                            // -------------------------------------------------------------------------------------------------
+
+                            .formGroup.basicGroup(class="chainStoreRelated {{if ~root.item.isPayment == 0 || ~root.item.isPayment == null }}hidden{{/if}}")
+                                .formGroupTitle 課金設定
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label
+                                                | 使用ポイント
+                                            .input
+                                                //- label.
+                                                //-     <input
+                                                //-         type="radio"
+                                                //-         name="#{situationFormShortCode('is_payment')}"
+                                                //-         value="1"
+                                                //-         {{if ~root.item.details[~languageCode][code].isPayment == 1 }}checked="checked"{{/if}}
+                                                //-         data-sync-fieldname="isPayment_true"
+                                                //-         data-language-code="{{:~languageCode}}"
+                                                //-         class="sync-os actionToggleCodeSync actionShowStoreRelated"
+                                                //-     >
+                                                //-     有料
+                                                //- label.
+                                                //-     <input
+                                                //-         type="radio"
+                                                //-         name="#{situationFormShortCode('is_payment')}"
+                                                //-         value="0"
+                                                //-         {{if ~root.item.details[~languageCode][code].isPayment == 0 || ~root.item.details[~languageCode][code].isPayment == null }}checked="checked"{{/if}}
+                                                //-         data-sync-fieldname="isPayment_false"
+                                                //-         data-language-code="{{:~languageCode}}"
+                                                //-         class="sync-os actionToggleCodeSync actionHideStoreRelated"
+                                                //-     >
+                                                //-     無料
+                                                input.short(
+                                                    type="number"
+                                                    name=situationFormShortCode('price')
+                                                    value="{{if ~root.item.details[~languageCode][code].price }}{{:~root.item.details[~languageCode][code].price}}{{else}}0{{/if}}"
+                                                    placeholder="例：100"
+                                                    data-sync-fieldname="price"
+                                                    data-language-code="{{:~languageCode}}"
+                                                    class="sync-os"
+                                                )
+                                                | &nbsp;pt
+                                .row
+                                    .col-6
+                                        .formItem
+                                            .label
+                                                | ストア文言<br>(有料の場合のみ)
+                                            .input
+                                                textarea(
+                                                    name=situationFormShortCode("store_text")
+                                                    rows="4"
+                                                )
+                                                    | {{:~root.item.details[~languageCode][code].storeText}}
+
+                                    .col-6
+                                        .formItem
+                                            .label
+                                                | ストア画像<br>(有料の場合のみ)<br>(234px x 308px)
+                                            .input
+                                                .storeThumbnailUploader.recycleUploader
+                                                    .field
+                                                        .preview
+                                                            img(src="{{:~root.item.details[~languageCode][code].storeThumbnailImagePath}}")
+                                                        .input
+                                                            input.middle(
+                                                                type="text"
+                                                                name=situationFormShortCode("store_thumbnail_image_path")
+                                                                value="{{:~root.item.details[~languageCode][code].storeThumbnailImagePath}}"
+                                                                data-sync-fieldname="storeThumbnailImagePath"
+                                                                data-language-code="{{:~languageCode}}"
+                                                                class="sync-os"
+                                                                placeholder="未選択"
+                                                            )
+                                                            .button(class="actionShowPopup") 選択
+                                                    .popup.hidden
+                                                        .button.buttonPopupClose(class="actionClosePopup") ×
+                                                        .preview
+                                                            img(src="{{:~root.item.details[~languageCode][code].storeThumbnailImagePath}}")
+                                                        .input
+                                                            input(
+                                                                type="text"
+                                                                value="{{:~root.item.details[~languageCode][code].storeThumbnailImagePath}}"
+                                                            )
+                                                        .upload
+
+                            // -------------------------------------------------------------------------------------------------
+
+                            //- .formGroup
+                            //-     .formGroupTitle 着信画面
+                            //-     .row
+                            //-         .col-12
+                            //-             .row
+                            //-                 .col-12
+                            //-                     .formItem
+                            //-                         .label
+                            //-                             | キャラクター<br>電話番号
+                            //-                         .input
+                            //-                             input.middle(
+                            //-                                 type="text"
+                            //-                                 name=situationFormShortCode("phone_number")
+                            //-                                 value="{{:~root.item.details[~languageCode][code].phoneNumber}}"
+                            //-                                 placeholder="例：581-0202-0202"
+                            //-                                 data-sync-fieldname="phoneNumber"
+                            //-                                 data-language-code="{{:~languageCode}}"
+                            //-                                 class="sync-os"
+                            //-                             )
+                            //-
+                            //-             .row
+                            //-                 .col-6
+                            //-                     .formItem
+                            //-                         .label
+                            //-                             | 画像
+                            //-                         .input
+                            //-                             .callBackgroundUploader.recycleUploader
+                            //-                                 .field
+                            //-                                     .preview
+                            //-                                         img(src="{{:~root.item.details[~languageCode][code].callBackgroundImagePath}}")
+                            //-                                     .input
+                            //-                                         input.middle(
+                            //-                                             type="text"
+                            //-                                             name=situationFormShortCode("call_background_image_path")
+                            //-                                             value="{{:~root.item.details[~languageCode][code].callBackgroundImagePath}}"
+                            //-                                             data-sync-fieldname="callBackgroundImagePath"
+                            //-                                             data-language-code="{{:~languageCode}}"
+                            //-                                             class="sync-os"
+                            //-                                             placeholder="未選択"
+                            //-                                         )
+                            //-                                         .button(class="actionShowPopup") 選択
+                            //-
+                            //-                                 .popup.hidden
+                            //-                                     .button.buttonPopupClose(class="actionClosePopup") ×
+                            //-                                     .preview
+                            //-                                         img(src="{{:~root.item.details[~languageCode][code].callBackgroundImagePath}}")
+                            //-                                     .input
+                            //-                                         input(
+                            //-                                             type="text"
+                            //-                                             value="{{:~root.item.details[~languageCode][code].callBackgroundImagePath}}"
+                            //-                                         )
+                            //-                                     .upload
+                            //-
+                            //-
+                            //-                 .col-6
+                            //-                     .row
+                            //-                         .col-12
+                            //-                             .formItem
+                            //-                                 .label 着信音音量
+                            //-                                 .input
+                            //-                                     input(
+                            //-                                         type="range"
+                            //-                                         name=situationFormShortCode("call_sound_volume")
+                            //-                                         value="{{if ~root.item.details[~languageCode][code].callSoundVolume}}{{:~root.item.details[~languageCode][code].callSoundVolume}}{{else}}1{{/if}}"
+                            //-                                         max="1"
+                            //-                                         step="0.1"
+                            //-                                         data-sync-fieldname="callSoundVolume"
+                            //-                                         data-language-code="{{:~languageCode}}"
+                            //-                                         class="sync-os"
+                            //-                                     )
+                            //-
+                            //-                     .row
+                            //-                         .col-12
+                            //-                             .formItem
+                            //-                                 .label スペシャル着信音
+                            //-                                 .input
+                            //-                                     label(class="{{if ~root.item.details[~languageCode][code].isUseSpecialCallSound == 1 }}selected{{/if}}").
+                            //-                                         <input
+                            //-                                             type="radio"
+                            //-                                             name="#{situationFormShortCode('is_use_special_call_sound')}"
+                            //-                                             value="1"
+                            //-                                             {{if ~root.item.details[~languageCode][code].isUseSpecialCallSound == 1 }}checked="checked"{{/if}}
+                            //-                                             data-sync-fieldname="isUseSpecialCallSound_true"
+                            //-                                             data-language-code="{{:~languageCode}}"
+                            //-                                             class="sync-os"
+                            //-                                         >
+                            //-                                         設定する
+                            //-                                     label(class="{{if ~root.item.details[~languageCode][code].isUseSpecialCallSound == 0 || ~root.item.details[~languageCode][code].isUseSpecialCallSound == null }}selected{{/if}}").
+                            //-                                         <input
+                            //-                                             type="radio"
+                            //-                                             name="#{situationFormShortCode('is_use_special_call_sound')}"
+                            //-                                             value="0"
+                            //-                                             {{if ~root.item.details[~languageCode][code].isUseSpecialCallSound == 0 || ~root.item.details[~languageCode][code].isUseSpecialCallSound == null }}checked="checked"{{/if}}
+                            //-                                             data-sync-fieldname="isUseSpecialCallSound_false"
+                            //-                                             data-language-code="{{:~languageCode}}"
+                            //-                                             class="sync-os"
+                            //-                                         >
+                            //-                                         設定しない
+                            //-
+                            //-                                     .callSpecialSoundUploader.recycleUploader
+                            //-                                         .field
+                            //-                                             .preview
+                            //-                                                 audio(src="{{:~root.item.details[~languageCode][code].specialCallSoundPath}}" controls="controls")
+                            //-                                             .input
+                            //-                                                 input.middle(
+                            //-                                                     type="text"
+                            //-                                                     name=situationFormShortCode("special_call_sound_path")
+                            //-                                                     value="{{:~root.item.details[~languageCode][code].specialCallSoundPath}}"
+                            //-                                                     data-sync-fieldname="specialCallSoundPath"
+                            //-                                                     data-language-code="{{:~languageCode}}"
+                            //-                                                     class="sync-os"
+                            //-                                                     placeholder="未選択"
+                            //-                                                 )
+                            //-                                                 .button(class="actionShowPopup") 選択
+                            //-
+                            //-                                         .popup.hidden
+                            //-                                             .button.buttonPopupClose(class="actionClosePopup") ×
+                            //-                                             .preview
+                            //-                                                 audio(src="{{:~root.item.details[~languageCode][code].specialCallSoundPath}}" controls="controls")
+                            //-                                             .input
+                            //-                                                 input(
+                            //-                                                     type="text"
+                            //-                                                     value="{{:~root.item.details[~languageCode][code].specialCallSoundPath}}"
+                            //-                                                 )
+                            //-                                             .upload
+
+                            // -------------------------------------------------------------------------------------------------
+
+                            .formGroup
+                                .formGroupTitle シーン設定
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label 通話シーンの<br>メディア形式
+                                            .input
+                                                select.middle(
+                                                    name=situationFormShortCode('scene_media_type')
+                                                    data-sync-fieldname="sceneMediaType"
+                                                    data-language-code="{{:~languageCode}}"
+                                                    class="actionShowSceneTypeRelated sync-os"
+                                                )
+                                                    | <option value="image" {{if ~root.item.details[~languageCode][code].sceneMediaType == "image"}}selected{{/if}}>画像</option>
+                                                    | <option value="video" {{if ~root.item.details[~languageCode][code].sceneMediaType == "video"}}selected{{/if}}>動画</option>
+
+                                .sceneSetEditor(
+                                    id="sceneSetEditor_{{:~languageCode}}_{{:code}}"
+                                    data-lang-code="{{:~languageCode}}"
+                                    data-os-code="{{:code}}"
+                                )
+
+                                .row()
+                                    .col-12
+                                        .formItem
+                                            .label シーンエディタ<br>編集結果<br>(デバッグ)
+                                            .input
+                                                    textarea(
+                                                        id="sceneSetEditor_{{:~languageCode}}_{{:code}}_value"
+                                                        type="text"
+                                                        name=situationFormShortCode('scene_sets')
+                                                        value="{{:~root.item.details[~languageCode][code].sceneSets}}"
+                                                        data-sync-fieldname="sceneSets"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    )
+
+                                hr
+
+                                //- .row
+                                //-     .col-12
+                                //-         .formItem
+                                //-             .label スペシャル<br>通話ボタン<br>640px x 128px
+                                //-             .input
+                                //-                 label(class="{{if ~root.item.details[~languageCode][code].isUseSpecialTalkButton == 1 }}selected{{/if}}").
+                                //-                     <input
+                                //-                         type="radio"
+                                //-                         name="#{situationFormShortCode('is_use_special_talk_button')}"
+                                //-                         value="1"
+                                //-                         {{if ~root.item.details[~languageCode][code].isUseSpecialTalkButton == 1 }}checked="checked"{{/if}}
+                                //-                         data-sync-fieldname="isUseSpecialTalkButton_true"
+                                //-                         data-language-code="{{:~languageCode}}"
+                                //-                         class="sync-os"
+                                //-                     >
+                                //-                     設定する
+                                //-                 label(class="{{if ~root.item.details[~languageCode][code].isUseSpecialTalkButton == 0 || ~root.item.details[~languageCode][code].isUseSpecialTalkButton == null }}selected{{/if}}").
+                                //-                     <input
+                                //-                         type="radio"
+                                //-                         name="#{situationFormShortCode('is_use_special_talk_button')}"
+                                //-                         value="0"
+                                //-                         {{if ~root.item.details[~languageCode][code].isUseSpecialTalkButton == 0 || ~root.item.details[~languageCode][code].isUseSpecialTalkButton == null }}checked="checked"{{/if}}
+                                //-                         data-sync-fieldname="isUseSpecialTalkButton_false"
+                                //-                         data-language-code="{{:~languageCode}}"
+                                //-                         class="sync-os"
+                                //-                     >
+                                //-                     設定しない
+                                //-
+                                //-                 .specialTalkButtonUploader.recycleUploader
+                                //-                     .field
+                                //-                         .preview
+                                //-                             img(src="{{:~root.item.details[~languageCode][code].specialTalkButtonImagePath}}")
+                                //-                         .input
+                                //-                             input.middle(
+                                //-                                 type="text"
+                                //-                                 name=situationFormShortCode("special_talk_button_image_path")
+                                //-                                 value="{{:~root.item.details[~languageCode][code].specialTalkButtonImagePath}}"
+                                //-                                 data-sync-fieldname="specialTalkButtonImagePath"
+                                //-                                 data-language-code="{{:~languageCode}}"
+                                //-                                 class="sync-os"
+                                //-                                 placeholder="未選択"
+                                //-                             )
+                                //-                             .button(class="actionShowPopup") 選択
+                                //-
+                                //-                     .popup.hidden
+                                //-                         .button.buttonPopupClose(class="actionClosePopup") ×
+                                //-                         .preview
+                                //-                             img(src="{{:~root.item.details[~languageCode][code].specialTalkButtonImagePath}}")
+                                //-                         .input
+                                //-                             input(
+                                //-                                 type="text"
+                                //-                                 value="{{:~root.item.details[~languageCode][code].specialTalkButtonImagePath}}"
+                                //-                             )
+                                //-                         .upload
+
+                            // -------------------------------------------------------------------------------------------------
+
+                            .formGroup
+                                .formGroupTitle オプション設定
+                                .row
+                                    .col-8
+                                        .formItem
+                                            .label スペシャルボタン背景<br>(640px x 128px)
+                                            .input
+                                                p 着信中に表示される応答・拒否ボタンの背景部分および通話中の通話終了ボタンの背景部分に使用される画像を設定します。
+                                                label(class="{{if ~root.item.details[~languageCode][code].isUseSpecialButton == 1 }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('is_use_special_button')}"
+                                                        value="1"
+                                                        {{if ~root.item.details[~languageCode][code].isUseSpecialButton == 1 }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="isUseSpecialButton_true"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    設定する
+                                                label(class="{{if ~root.item.details[~languageCode][code].isUseSpecialButton == 0 || ~root.item.details[~languageCode][code].isUseSpecialButton == null }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('is_use_special_button')}"
+                                                        value="0"
+                                                        {{if ~root.item.details[~languageCode][code].isUseSpecialButton == 0 || ~root.item.details[~languageCode][code].isUseSpecialButton == null }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="isUseSpecialButton_false"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    設定しない
+
+                                                .specialButtonUploader.recycleUploader
+                                                    .field
+                                                        .preview
+                                                            img(src="{{:~root.item.details[~languageCode][code].specialButtonImagePath}}")
+                                                        .input
+                                                            input.middle(
+                                                                type="text"
+                                                                name=situationFormShortCode("special_button_image_path")
+                                                                value="{{:~root.item.details[~languageCode][code].specialButtonImagePath}}"
+                                                                data-sync-fieldname="specialButtonImagePath"
+                                                                data-language-code="{{:~languageCode}}"
+                                                                class="sync-os"
+                                                                placeholder="未選択"
+                                                            )
+                                                            .button(class="actionShowPopup") 選択
+
+                                                    .popup.hidden
+                                                        .button.buttonPopupClose(class="actionClosePopup") ×
+                                                        .preview
+                                                            img(src="{{:~root.item.details[~languageCode][code].specialButtonImagePath}}")
+                                                        .input
+                                                            input(
+                                                                type="text"
+                                                                value="{{:~root.item.details[~languageCode][code].specialButtonImagePath}}"
+                                                            )
+                                                        .upload
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label
+                                                | フッター広告
+                                            .input
+                                                label(class="{{if ~root.item.details[~languageCode][code].isHiddenFooterAd == 0 || ~root.item.details[~languageCode][code].isHiddenFooterAd == null }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('is_hidden_footer_ad')}"
+                                                        value=""
+                                                        {{if ~root.item.details[~languageCode][code].isHiddenFooterAd == 0 || ~root.item.details[~languageCode][code].isHiddenFooterAd == null }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="isHiddenFooterAd_false"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    表示する
+                                                label(class="{{if ~root.item.details[~languageCode][code].isHiddenFooterAd == 1 }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('is_hidden_footer_ad')}"
+                                                        value="1"
+                                                        {{if ~root.item.details[~languageCode][code].isHiddenFooterAd == 1 }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="isHiddenFooterAd_true"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    表示しない
+
+                                hr
+
+                                .row
+                                    .col-12
+                                        .formItem
+                                            .label インターステイシャル
+                                            .input
+                                                label(class="actionHideInterstitialTypeRelated {{if ~root.item.details[~languageCode][code].interstitialType == 'normal'  || ~root.item.details[~languageCode][code].interstitialType == null }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('interstitial_type')}"
+                                                        value="normal"
+                                                        {{if ~root.item.details[~languageCode][code].interstitialType == "normal"  || ~root.item.details[~languageCode][code].interstitialType == null }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="interstitialType_normal"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    通常(インターステイシャルA)
+
+                                                label(class="actionShowYoutubeRelated {{if ~root.item.details[~languageCode][code].interstitialType == 'youtube' }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('interstitial_type')}"
+                                                        value="youtube"
+                                                        {{if ~root.item.details[~languageCode][code].interstitialType == "youtube" }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="interstitialType_youtube"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    Youtube自動転送(インターステイシャルB)
+
+                                                label(class="actionShowWebRelated {{if ~root.item.details[~languageCode][code].interstitialType == 'web' }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('interstitial_type')}"
+                                                        value="web"
+                                                        {{if ~root.item.details[~languageCode][code].interstitialType == "web" }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="interstitialType_web"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    Web自動転送
+
+                                .row(class="chainYoutubeRelated hidden")
+                                    .col-8
+                                        .formItem
+                                            .label Youtube<br>転送先動画URL
+                                            .input
+                                                input(
+                                                    type="url"
+                                                    name=situationFormShortCode("youtube_url")
+                                                    value="{{:~root.item.details[~languageCode][code].youtubeUrl}}"
+                                                    placeholder="例：http://www.youtube.com/nantoka"
+                                                    data-sync-fieldname="youtubeUrl"
+                                                    data-language-code="{{:~languageCode}}"
+                                                    class="sync-os"
+                                                )
+
+                                .row(class="chainWebRelated hidden")
+                                    .col-8
+                                        .formItem
+                                            .label ウェブページ<br>転送先URL
+                                            .input
+                                                input(
+                                                    type="url"
+                                                    name=situationFormShortCode("web_interstitial_url")
+                                                    value="{{:~root.item.details[~languageCode][code].webInterstitialUrl}}"
+                                                    placeholder="例：http://www.media-active.co.jp/"
+                                                    data-sync-fieldname="webInterstitialUrl"
+                                                    data-language-code="{{:~languageCode}}"
+                                                    class="sync-os"
+                                                )
+
+                                .row
+                                    .col-8
+                                        .formItem
+                                            .label 着信拒否時の<br>ｲﾝﾀｰｽﾃｲｼｬﾙ表示
+                                            .input
+                                                label(class="{{if ~root.item.details[~languageCode][code].isSkipInterstitialOnDecline == 0 || ~root.item.details[~languageCode][code].isSkipInterstitialOnDecline == null }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('is_skip_interstitial_on_decline')}"
+                                                        value="0"
+                                                        {{if ~root.item.details[~languageCode][code].isSkipInterstitialOnDecline == 0 || ~root.item.details[~languageCode][code].isSkipInterstitialOnDecline == null }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="isSkipInterstitialOnDecline_true"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    表示する
+                                                label(class="{{if ~root.item.details[~languageCode][code].isSkipInterstitialOnDecline == 1 }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('is_skip_interstitial_on_decline')}"
+                                                        value="1"
+                                                        {{if ~root.item.details[~languageCode][code].isSkipInterstitialOnDecline == 1 }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="isSkipInterstitialOnDecline_false"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    表示しない
+
+                                hr
+
+                                .row
+                                    .col-8
+                                        .formItem
+                                            .label 終了画面での<br>シェアボタンの表示
+                                            .input
+                                                label(class="{{if ~root.item.details[~languageCode][code].isSituationShareHidden == 0 || ~root.item.details[~languageCode][code].isSituationShareHidden == null }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('is_situation_share_hidden')}"
+                                                        value="0"
+                                                        {{if ~root.item.details[~languageCode][code].isSituationShareHidden == 0 || ~root.item.details[~languageCode][code].isSituationShareHidden == null }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="isSituationShareHidden_false"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    表示する
+                                                label(class="{{if ~root.item.details[~languageCode][code].isSituationShareHidden == 1 }}selected{{/if}}").
+                                                    <input
+                                                        type="radio"
+                                                        name="#{situationFormShortCode('is_situation_share_hidden')}"
+                                                        value="1"
+                                                        {{if ~root.item.details[~languageCode][code].isSituationShareHidden == 1 }}checked="checked"{{/if}}
+                                                        data-sync-fieldname="isSituationShareHidden_true"
+                                                        data-language-code="{{:~languageCode}}"
+                                                        class="sync-os"
+                                                    >
+                                                    表示しない
+
+                            // -------------------------------------------------------------------------------------------------
+
+                    | {{/for}}
+                    | {{/for}}
+
+
+
+        .paneFooter
+            .menu
+                .button.buttonSave.actionSave {{:saveActionName}}する
+                |{{if id}}
+                .button.actionDelete(data-id="{{:id}}") 削除する
+                | {{/if}}

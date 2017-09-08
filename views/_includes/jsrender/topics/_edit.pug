@@ -1,0 +1,123 @@
+script(type="text/html" id="edit")
+    .paneInner
+
+        .paneHeader
+            .paneTitle お知らせの{{:actionName}}
+
+            .buttonClose.actionCloseCurrentSidePane
+                | <i class="fa fa-times" aria-hidden="true"></i>
+
+        .paneContent
+            .topicEditForm
+                form(id="editForm" action="{{:formActionURL}}" method="post")
+                    input(type="submit" class="hidden")
+                    input(type="hidden" name="_method" value="{{:formMethod}}")
+                    input(type="hidden" name="language_id" value="{{if item.languageId}}{{:item.languageId}}{{else}}1{{/if}}")
+
+                    //- ===================================================
+
+                    .formGroup
+                        .row
+                            .col-12
+                                .formItem
+                                    input(
+                                        type="hidden"
+                                        name="updateErr"
+                                        value="{{:item.timestamps.updateErr}}"
+                                    )
+                                    p(class="mesError" style="display:none" data-id="{{:dpErr}}") 他の画面及び人に更新されているため、保存できません    
+                                    .label ステータス
+                                    .input
+                                        label(class="{{if item.isEnabled == true || item.isEnabled == null}}selected{{/if}}")
+                                            | <input type="radio" name="is_enabled" value="1"{{if item.isEnabled == true || item.isEnabled == null}}checked="checked"{{/if}}>
+                                            | 有効
+                                        label(class="{{if item.isEnabled == false}}selected{{/if}}")
+                                            | <input type="radio" name="is_enabled" value="0"{{if item.isEnabled == false}}checked="checked"{{/if}}>
+                                            | 無効
+
+                    //- ===================================================
+
+                    .formGroup
+                        .row
+                            .col-12
+                                .formItem
+                                    .label OS種別
+                                    .input
+                                        label(class="{{if item.osId == null}}selected{{/if}}")
+                                            | <input type="radio" name="os_id" value="null" {{if item.osId == null}}checked="checked"{{/if}}>
+                                            | 共通
+                                        label(class="{{if item.osId == 1}}selected{{/if}}")
+                                            | <input type="radio" name="os_id" value="1" {{if item.osId == 1}}checked="checked"{{/if}}>
+                                            | {{:os[0].name}}
+                                        label(class="{{if item.osId == 2}}selected{{/if}}")
+                                            | <input type="radio" name="os_id" value="2" {{if item.osId == 2}}checked="checked"{{/if}}>
+                                            | {{:os[1].name}}
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 日付
+                                    .input
+                                        input.middle(type="date" name="date" value="{{getPlainDate:item.date}}" required)
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label タイトル
+                                    .input
+                                        input(type="text" name="title" value="{{:item.title}}" required)
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 本文
+                                    .input
+                                        textarea(type="text" name="comment" required)
+                                            | {{:item.comment}}
+                                        .description
+                                            p タグ
+                                            ul
+                                                li 画像　≫　[img]
+                                                li リンク　≫　[link:http://～]　〇〇〇文章 or [img]　[endlink]
+                                                //- li [img]で本文中にアップロードした画像が追加できます。
+                                                //- li [link:http://～]リンクを付けたい内容[endlink]でリンクが追加できます。
+                                                //- li [link:http://～ blank]リンクを付けたい内容[endlink]にすると新しいウィンドウで開くリンクに変更できます
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 画像
+                                    .input
+                                        .imageUploader.recycleUploader
+                                            .field
+                                                .preview
+                                                    img(src="{{:item.imageUrl}}")
+                                                .input
+                                                    input(type="text" name="image_url" value="{{:item.imageUrl}}" placeholder="未選択")
+                                                    .button(class="actionShowPopup") 選択
+
+                                            .popup.hidden
+                                                .button.buttonPopupClose(class="actionClosePopup") ×
+                                                .preview
+                                                    img(src="{{:item.imageUrl}}")
+                                                .input
+                                                    input(type="text" value="{{:item.imageUrl}}")
+                                                    .button.actionRemove 削除
+                                                .upload
+
+                        .row
+                            .col-12
+                                .formItem
+                                    .label 優先度
+                                    .input
+                                        input(type="range" min="1" max="5" syep="1" name="priority" value="{{:item.priority}}")
+                                        ul.priorityRange
+                                            li 1
+                                            li 2
+                                            li 3
+                                            li 4
+                                            li 5
+
+        .paneFooter
+            .menu
+                .button.buttonSave.actionSave {{:saveActionName}}する

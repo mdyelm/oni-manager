@@ -1,0 +1,43 @@
+script(type="text/html" id="list")
+    .info
+        .resultCount
+            span {{:listData.length}}
+            | 件のピックアップ広告を表示中
+
+    .list
+        ul
+            | {{for listData}}
+            li.item(
+                class="{{if isEnabled == 0}}disabled{{/if}}"
+                data-id="{{:id}}"
+                data-languageId="{{:languageId}}"
+                data-osId="{{:osId}}"
+                data-position="{{:#getIndex()}}"
+            )
+                .thumbnail
+                    img(src="{{if adType == 'normal'}}{{:bannerImagePath}}{{else}}{{:nativeAdSettings.background.imagePath}}{{/if}}")
+                .detail
+                    .adName
+                        | {{:name}}
+
+                    .adIsEnabled(class="{{enableClass:isEnabled}}")
+                        | {{enableString:isEnabled}}
+
+                    .adType
+                        | <i class="fa fa-picture-o" aria-hidden="true"></i>
+                        | {{labelAdType:adType}}
+
+                    .adTerms
+                        | {{getLabeledDateTime:adStartDate}}<br>
+                        | ～ {{getLabeledDateTime:adEndDate}}
+
+                    .adDuration
+                        | <i class="fa fa-clock-o" aria-hidden="true"></i>
+                        | {{msToSecond:adDuration}} 秒間表示
+
+                .position
+                    .menu
+                        .button.actionPositionUp ↑
+                        .button.actionPositionDown ↓
+
+            | {{/for}}

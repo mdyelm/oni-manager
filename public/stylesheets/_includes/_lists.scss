@@ -1,0 +1,192 @@
+
+.dataList {
+
+    .info {
+        margin: 0 0 0 0;
+        padding: 15px;
+
+        .resultCount span {
+            margin: 0 5px 0 0;
+            color: rgba(200,100,100, 1);
+            font-weight: bold;
+        }
+
+    }
+
+    %list {
+        padding: 15px;
+        background: #f5f5f5;
+        border-radius: 5px;
+
+        table {
+            margin: 0;
+            width: calc(100%);
+            background: #fff;
+            border-collapse: collapse;
+        }
+
+        tr.header {
+            border-bottom: 1px solid #eee;
+            background: #fff;
+
+            th {
+                padding: 10px;
+                color: #aaa;
+                font-weight: normal;
+                text-align: left;
+                font-size: 12px;
+            }
+
+            th.center {
+                text-align: center;
+            }
+
+        }
+
+        tr.item {
+            border-bottom: 1px solid #eee;
+            color: #555;
+
+            &:hover {
+                background: $color_focus;
+                color: #000;
+                cursor: pointer;
+            }
+
+            &.disabled {
+                td {opacity: 0.4}
+            }
+
+            td {
+                padding: 10px;
+            }
+
+            td.center {
+                text-align: center;
+            }
+
+            td img {
+                @include zoomer;
+                max-width: 100%;
+                max-height: 100%;
+                width: 48px;
+                height: 48px;
+                background: #eee;
+            }
+
+        }
+
+
+    }
+
+    .list {
+
+        @extend %list;
+
+        tr.item {
+
+            td.name {
+                position: relative;
+                padding-left: 62px;
+
+                .thumbnail {
+                    position: absolute;
+                    top: calc(50% - 25px);
+                    left: 15px;
+
+                    img {
+                        width: 32px;
+                    }
+
+                }
+            }
+
+            td.isPayment {
+
+                .payment { color: red; }
+                .free { color: blue; }
+
+            }
+
+            td.isEnabled {
+
+                .enabled {
+                    color: $color_success;
+                }
+
+                .disabled {
+                    color: #aaa;
+                }
+
+                .test {
+                    color: orange;
+                }
+
+            }
+
+            td.isMenuVisible {
+
+                .visible, .hidden {
+                    display: none;
+                }
+
+                .visible {
+                    color: #333;
+                }
+
+                .hidden {
+                    color: #aaa;
+                }
+
+                .isVisible {
+                    .visible { display: block; }
+                    .hidden { display: none; }
+                }
+
+                .isHidden {
+                    .visible { display: none; }
+                    .hidden { display: block; }
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
+.verticalList {
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    list-style-type: none;
+
+    .listItem {
+        position: relative;
+        margin: 0;
+        padding: 20px 20px 20px 20px;
+        border-bottom: 1px solid #ccc;
+        border-radius: 3px;
+
+        &:last-child {
+            border: 0;
+        }
+
+        &.disabled {
+            .listItemInner {
+                opacity: 0.4;
+            }
+        }
+
+        .listItemInner {
+            margin: 0 0 30px 0;
+        }
+
+        .menu {
+            margin: 0 0 0 auto;
+        }
+
+    }
+
+}

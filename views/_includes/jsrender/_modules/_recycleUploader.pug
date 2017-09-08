@@ -1,0 +1,35 @@
+script(type="text/html" id="recycleUploader")
+    .list
+        .fileList
+            .fileListItem(data-filePath="")
+                | <i class="fa fa-file-o" aria-hidden="true"></i>
+                | 選択無し
+
+            | {{for listData}}
+            .fileListItem(data-filePath="{{:filePath}}" data-fileName="{{:fileName}}")
+                | {{if ~root.type == "image"}}
+                .itemPreview: img(src="{{:filePath}}{{:~getFingerPrint()}}")
+                | {{/if}}
+                span.fileName
+                    | {{if ~root.type == "image"}}<i class="fa fa-picture-o" aria-hidden="true"></i>{{/if}}
+                    | {{if ~root.type == "sound"}}<i class="fa fa-volume-up" aria-hidden="true"></i>{{/if}}
+                    | {{:fileName}}
+                span.fileSize
+                    | ({{:fileSize}})
+                .button.buttonRemove.actionRemove
+                    | <i class="fa fa-trash-o" aria-hidden="true"></i>
+            | {{/for}}
+
+            //- li.selected
+            //-     label
+            //-         input(type="radio" name="imagePathSelect" checked="checked")
+            //-         | <i class="fa fa-file-o" aria-hidden="true"></i>
+            //-         | FileName
+            //-     .preview: img(src="/images/001.jpg")
+            //-     .button.buttonRemove.actionRemove
+            //-         | <i class="fa fa-trash-o" aria-hidden="true"></i>
+
+    .form
+        input(type="file" name="menuBackgroundImage" id="file")
+        .menu
+            .button.buttonUpload.actionUploadItem アップロード

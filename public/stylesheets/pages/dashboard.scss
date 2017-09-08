@@ -1,0 +1,47 @@
+@import "../_includes/_define";
+
+pre {
+    margin: 0;
+    padding: 15px;
+}
+
+.deployLogList,
+.operationLogList {
+    margin: 10px;
+    padding: 0;
+
+    li {
+        display: flex;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+
+        &:last-child {
+            border: 0;
+        }
+
+        .date,
+        .user,
+        .detail {
+            margin: 0 20px 0 0;
+        }
+
+        .date {
+            margin: 0 20px 0 0;
+            font-weight: bold;
+        }
+
+        .user {
+            margin: 0 20px 0 0;
+            i { margin: 0 0.25em 0 0; }
+        }
+
+
+        .detail {
+            flex: 1;
+        }
+
+
+
+    }
+
+}

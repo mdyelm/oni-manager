@@ -1,0 +1,36 @@
+@import "../_define";
+
+.formEnviromentSelector {
+    margin: 20px -30px;
+    padding: 10px 20px 20px;
+    background: #bfb8ae;
+
+    .language,
+    .os {
+        display: flex;
+    }
+
+
+    .languageItem,
+    .osItem {
+        flex: 1;
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        text-align: center;
+        cursor: pointer;
+        border-radius: 5px;
+
+        &:hover {
+            background: #fff;
+        }
+
+        &.selected {
+            border: 1px solid #333;
+            background: #333;
+            color: #fff;
+        }
+
+    }
+
+}
